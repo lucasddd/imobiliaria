@@ -1,0 +1,25 @@
+{% extends "master.twig" %}
+
+
+
+{% block conteudo %}
+    {{ parent() }}
+    
+    <br>
+    sobrescrevi o conteudo
+    <br>
+    <button id="butao1" value="valor_do_botao">Botao</button>
+    <div id="div_retorno">
+        <br>
+        aqui será injetado o retorno
+        <br>
+    </div>
+    <div id="processando" style="display: none;">
+        <img src="img/ajax-loader.gif" />
+    </div>
+
+{% endblock %}
+
+{% block rodape %}
+    {{ parent() }}
+{% endblock %}

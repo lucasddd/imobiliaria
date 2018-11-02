@@ -1,0 +1,45 @@
+{% extends "master.twig"%}
+
+{% block conteudo %}
+
+
+    <form  class="form-group center-block text-center" id="formCadastro" enctype="multipart/form-data">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">ID</span>
+            </div>
+            <input type="text" name="id" class="form-control" disabled="true"/>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Descrição</span>
+            </div>
+            <input type="text" name="descricao" class="form-control"/>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Preço</span>
+            </div>
+            <input type="number" name="preco" class="form-control"/>
+        </div>
+        
+        <div class="input-group">
+             <input type="file" name="imagem"/>
+        </div>
+        
+        
+        <div class="">  
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+        </div>
+
+    </form>
+
+    <div id="div_retorno">
+        
+    </div>
+    <div id="processando" style="display: none;">
+        <img src="img/ajax-loader.gif" />
+    </div>
+    
+{% endblock  %}

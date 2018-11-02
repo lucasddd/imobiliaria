@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Meu projeto - {% block titulo %}{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <div class="container">
+            {% block conteudo %}
+                {{ include('componentes/menu.twig') }}
+                <div>Texto da master<br>   
+                    {# {% for produto in dados %}
+                         Produto: {{ produto.id }} <br>
+                         Descrição: {{ produto.descricao|e }} <br> <div></div>
+                         Preço: {{ produto.preco }} <br>
+                         <br>
+                         <hr>
+                     {% endfor %}#}
+                </div>
+            {% endblock %}
+
+            {% block rodape %}
+
+                <script src="js/jquery-3.3.1.min.js" type="text/javascript" ></script>
+                <script src="js/funcoes.js" type="text/javascript" ></script>
+                <script src="js/bootstrap.min.js" type="text/javascript"></script>
+            {% endblock %}
+        </div>
+    </body>
+</html>
