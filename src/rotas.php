@@ -7,6 +7,12 @@ use Symfony\Component\Routing\Route;
 
 $rotas = new RouteCollection();
 
+$rotas->add('raiz', new Route('/',
+        array('_controller' => 'PPI2\Controller\ControllerIndex',"method" => 'index')));
+
+$rotas->add('login', new Route('/login',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'validaLogin')));
 
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
