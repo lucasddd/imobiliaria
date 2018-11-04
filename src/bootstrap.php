@@ -17,12 +17,7 @@ $sessao->start();
 
 
 //$sessao->add("Usuario", 'Chris');
-$sessao->del();
-
-
-
-
-
+//$sessao->del();
 
 include 'rotas.php';
 
@@ -38,6 +33,12 @@ $matcher = new UrlMatcher($rotas, $contexto);
 
 $loader = new FilesystemLoader(__DIR__ . '/View');
 $environment = new Environment($loader);
+if(isset($_SESSION['ppi2'])){
+    if(isset($_SESSION['ppi2']['usuario']))
+        $environment->addGlobal('usuario', $_SESSION['ppi2']['usuario']);
+}else{
+    $environment->addGlobal('usuario',null);
+}
 //$environment->addGlobal('session', $_SESSION);
 
 try {

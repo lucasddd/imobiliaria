@@ -9,16 +9,11 @@ use PDO;
 
 class UsuarioModelo {
 
-    $table = 'usuarios';
-
-    function __construct() {
-
-    }
 
     function listar() {
 
         try {
-            $sql = 'select * from '.$table.' order by nome';
+            $sql = 'select * from usuarios order by nome';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->execute();
             return $p_sql->fetchAll(PDO::FETCH_OBJ);
@@ -30,7 +25,7 @@ class UsuarioModelo {
     function cadastrar(Usuario $usuario) {
 
         try {
-            $sql = 'insert into '.$table.' (nome) values(:nome)';
+            $sql = 'insert into usuarios (nome) values(:nome)';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':nome', $usuario->getNome());
             if ($p_sql->execute())
@@ -44,7 +39,7 @@ class UsuarioModelo {
     function permissao($usuario_id) {
 
         try {
-            $sql = 'select * from '.$table.' where id = :id order by nome';
+            $sql = 'select * from usuarios where id = :id order by nome';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':id', $usuario_id);
             $p_sql->execute();
@@ -57,12 +52,17 @@ class UsuarioModelo {
     function login($login, $senha) {
 
         try {
-            $sql = 'select * from '.$table.' where email = :email and senha = :senha limit 1';
+            $sql = 'select id,nome,email,cpf,status,permissao_id from usuarios where email = lower(:email) and senha = md5(:senha) limit 1';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':email', $login);
             $p_sql->bindValue(':senha', $senha);
             $p_sql->execute();
-            return $p_sql->fetchAll(PDO::FETCH_OBJ);
+            $usuario = $p_sql->fetchAll(PDO::FETCH_OBJ);
+            if(isset($usuario[0])){
+                return $usuario[0];
+            }else{
+                return null;
+            }
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;
         }

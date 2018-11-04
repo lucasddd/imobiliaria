@@ -65,24 +65,26 @@
             },
             success: function (dados) {
                 //alert(dados);
-                $("#div_retorno p").text("Aguarde. Iniciando sessão...");
-                $("#div_retorno p").removeClass('alert-danger');
-                $("#div_retorno p").toggleClass('alert-success');
-                setTimeout(function(){
-                    $("#btnLogin").children().removeClass('fa-spinner fa-spin');
-                    $("#btnLogin").children().addClass('fa-sign-in');
-                    window.location.href="/";
-                },2000);
-                /*if(dados == "errologin"){
-                    $("#div_retorno").html("Usuário ou senha inválido.");
-                }else if(dados == "admin"){
-                    window.location.href = "/admin";
-                }else if(dados == "cliente"){
-                    window.location.href = "/agenda";
-                }else{
-                    window.location.href = "/";
+                if(dados == 'ok'){
+                    $("#div_retorno p").text("Aguarde. Iniciando sessão...");
+                    $("#div_retorno p").removeClass('alert-danger');
+                    $("#div_retorno p").toggleClass('alert-success');
+                    setTimeout(function(){
+                        $("#btnLogin").children().removeClass('fa-spinner fa-spin');
+                        $("#btnLogin").children().addClass('fa-sign-in');
+                        window.location.href="/admin";
+                    },2000);
+                }else if(dados == 'inexistente'){
+                    $("#div_retorno p").text("Usuário ou senha inválido...");
+                    $("#div_retorno p").removeClass('alert-success');
+                    $("#div_retorno p").toggleClass('alert-danger');
+                    setTimeout(function(){
+                        $("#btnLogin").children().removeClass('fa-spinner fa-spin');
+                        $("#btnLogin").children().addClass('fa-sign-in');
+                        
+                    },2000);
                 }
-                */
+                
             },
             beforeSend: function () {
                 $("#btnLogin").children().removeClass('fa-sign-in');

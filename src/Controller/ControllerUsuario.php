@@ -6,8 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
-use PPI2\Entidades\Produto;
-use PPI2\Modelos\ModeloProdutos;
+use PPI2\Entidades\Usuario;
+use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
 
 class ControllerUsuario {
@@ -26,7 +26,18 @@ class ControllerUsuario {
     public function validaLogin(){
       $login = $this->contexto->get('login');
       $senha = $this->contexto->get('senha');
-      print_r('login = '.$login.' senha = '.$senha);
+      if(isset($login) && isset($senha)){
+          $usuarioModelo = new UsuarioModelo();
+          $usuario = $usuarioModelo->login($login,$senha);
+          if(isset($usuario)){
+            $this->sessao->add('usuario',$usuario);
+            echo('ok');
+          }else{
+            echo("inexistente");
+          }
+          return;
+      }
+      //print_r('login = '.$login.' senha = '.$senha);
       //return echo('oi');
       //die();
     }
@@ -66,6 +77,11 @@ class ControllerUsuario {
           else
           echo "erro na inserção";
          */
+    }
+    public function logout(){
+        $this->sessao->del();
+        $re = new RedirectResponse('/');
+        $re->send();
     }
 
 }

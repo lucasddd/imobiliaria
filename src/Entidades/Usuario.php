@@ -12,6 +12,7 @@ class Usuario {
     private $status;
     private $permissao;
     
+    /*
     function __construct($nome,$email,$senha,$cpf,$status,$permissao) {
         $this->nome = $nome;
         $this->senha = $senha;
@@ -20,7 +21,7 @@ class Usuario {
         $this->status = $status;
         $this->permissao = $permissao;
     }
-    
+    */
     function getId() {
         return $this->id;
     }

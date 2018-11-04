@@ -6,8 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
-use PPI2\Entidades\Produto;
-use PPI2\Modelos\ModeloProdutos;
+use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
 
 class ControllerIndex {
@@ -25,14 +24,15 @@ class ControllerIndex {
     }
 
     public function index() {
-        //if ($this->sessao->existe('Usuario'))
+      if(!empty($this->sessao->get('usuario'))){
+        $usuario = $this->sessao->get('usuario');
+        //print_r($usuario->nome);
+        //return;
+        return $this->response->setContent($this->twig->render('admin/dashboard.php',['usuario' => $usuario]));
+      }else{
         return $this->response->setContent($this->twig->render('welcome.php'));
-        /*   else{
-          $destino = '/login';
-          $redirecionar = new RedirectResponse($destino);
-          $redirecionar->send();
-
-          } */
+      }
+      return;
     }
 
 }

@@ -5,11 +5,8 @@
 <h1 class="text-center">Bem vindo ao painel administrativo</h1>
 
 <div class="row">
-    <div class="col-md-6">
-        <img src="/logo/dashboard.jpg" class="img-fluid" style="height:350px">
-    </div>
-    <div class="col-md-6">
-        <img src="/logo/imobiliaria.png" class="img-fluid" style="height:350px">
+    <div class="col-md-8 offset-2">
+        <img src="/logo/dashboard.jpg" class="img-fluid" style="width: 100%; height: 400px;">
     </div>
 </div>
 <div id="div_retorno">
