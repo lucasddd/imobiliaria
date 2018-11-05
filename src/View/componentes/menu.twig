@@ -6,26 +6,36 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Clientes <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Imóveis</a>
-      </li>
-      <li class="nav-item dropdown">
+    {% if usuario is not empty %}
+    <li class="nav-item dropdown active">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          <i class="fa fa-group fa-fw"></i> Clientes
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-table fa-fw"></i> Listar clientes</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw"></i> Tipos de clientes</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-plus fa-fw"></i> Cadastrar cliente</a>
         </div>
+      </li>
+      <li class="nav-item dropdown active">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-bank fa-fw"></i> Imóveis
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><i class="fa fa-table fa-fw"></i> Listar imóveis</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-cog fa-fw"></i> Tipos de imóveis</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#"><i class="fa fa-plus fa-fw"></i> Cadastrar imóvel</a>
+        </div>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i class="fa fa-dollar fa-fw"></i> Contabilidade <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#">Disabled</a>
       </li>
+      {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
         {% if usuario is not empty %}
