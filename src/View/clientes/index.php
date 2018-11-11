@@ -1,13 +1,13 @@
 {% extends "master.twig"%}
 {% block conteudo %}
 <div class="col-md-12">
-	<h1 class="text-center text-success">Tipos de cliente</h1>
+	<h1 class="text-center text-success">.:: Lista de Clientes ::.</h1>
 	<div class="row">
 		<div class="col-md-6">
 			<a href="/admin/tiposcliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="col-md-6">
-			<form action="/admin/tiposcliente" method="GET">
+			<form action="/admin/clientes" method="GET">
 			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
 			</form>
 		</div>
@@ -17,17 +17,25 @@
 			<thead>
 				<tr style="" class="bg-dark text-white">
 					<th class="text-center">Id</th>
-					<th class="text-center">Descrição</th>
+					<th class="text-center">Cliente</th>
+					<th class="text-center">CPF</th>
+					<th class="text-center">Telefone</th>
+					<th class="text-center">Locatário?</th>
+					<th class="text-center">Locador?</th>
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
 			<tbody id="conteudocateg">
-				{% for tipocliente in tipoclientes %}
+				{% for cliente in clientes %}
 				<tr>
-					<td>{{tipocliente.id}}</td>
-					<td>{{tipocliente.descricao}}</td>
+					<td>{{cliente.id}}</td>
+					<td>{{cliente.nome}}</td>
+					<td>{{cliente.cpf}}</td>
+					<td>{{cliente.telefone}}</td>
+					<td>locatário</td>
+					<td>locador</td>
 					<td>
-						<a href="/admin/tiposcliente/editar/{{tipocliente.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
+						<a href="/admin/cliente/editar/{{cliente.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
 					</td>
 				</tr>
 				{% endfor %}
@@ -44,7 +52,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 		</div>
-		<span id ="detalhestipocliente" class="">Total de: {{tipoclientes|length}} registro(s).</span>
+		<span id ="detalhescliente" class="">Total de: {{clientes|length}} registro(s).</span>
 	</div>
 
 
