@@ -124,7 +124,6 @@ class ControllerTipoCliente {
         $erros['len2'] = 'A palavra precisa ter entre 5 e 255 caractéres.';
       }
       if(!empty($erros)){
-        $erros['chu'] = 'não sei';
         return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['erros' => $erros,'tipocliente' => $tipoCliente]));
       }
       $duplicidadeDescricao = $tipos->consultaDescricaoComExcessaoId($desc,$id);

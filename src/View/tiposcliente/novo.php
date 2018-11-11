@@ -19,8 +19,12 @@
 						{% endif %}
 					</div>
 				</div>
-				<label class="control-label">Descrição</label>
-				<input type="text" class="form-control" id="descricao" name="descricao" required autofocus>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Descrição</span>
+					</div>
+					<input type="text" name="descricao" class="form-control" required autofocus/>
+				</div>
 			</div>
 			<div class="text-center">
 				<button class="btn btn-success" id="btnSalvarTipoCliente">Salvar</button>

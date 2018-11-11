@@ -1,10 +1,10 @@
 {% extends "master.twig"%}
 {% block conteudo %}
 <div class="col-md-12">
-	<h1 class="text-center text-success">.:: Lista de Clientes ::.</h1>
+	<h4 class="text-center text-success">.:: Lista de Clientes ::.</h4>
 	<div class="row">
 		<div class="col-md-6">
-			<a href="/admin/tiposcliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
+			<a href="/admin/cliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="col-md-6">
 			<form action="/admin/clientes" method="GET">

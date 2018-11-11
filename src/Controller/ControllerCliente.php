@@ -26,13 +26,13 @@ class ControllerCliente {
   public function index() {
     if ($this->sessao->existe('usuario')){
       $busca = $this->contexto->get('busca');
-      $tipos = new TipoClienteModelo();
+      $clientesModelo = new ClienteModelo();
       if(isset($busca)){
-        $tipoclientes = $tipos->busca($busca);
+        $clientes = $clientesModelo->busca($busca);
       }else{
-        $tipoclientes = $tipos->listar();
+        $clientes = $clientesModelo->listar();
       }
-      return $this->response->setContent($this->twig->render('tiposcliente/index.php',['tipoclientes' => $tipoclientes]));
+      return $this->response->setContent($this->twig->render('clientes/index.php',['clientes' => $clientes]));
     }else{
       $destino = '/';
       $redirecionar = new RedirectResponse($destino);
@@ -59,8 +59,8 @@ class ControllerCliente {
         $redirecionar->send();
         return;   
       }
-      $tipos = new TipoClienteModelo();
-      $tipoCliente = $tipos->getTipoCliente($id);
+      $clientesModelo = new TipoClienteModelo();
+      $tipoCliente = $clientesModelo->getTipoCliente($id);
       if($tipoCliente != null){
         return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['tipocliente' => $tipoCliente]));
       }
@@ -72,7 +72,7 @@ class ControllerCliente {
   }
   public function novo() {
     if ($this->sessao->existe('usuario'))
-      return $this->response->setContent($this->twig->render('tiposcliente/novo.php',['erros' => '']));
+      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => '']));
     else{
       $destino = '/';
       $redirecionar = new RedirectResponse($destino);
@@ -89,15 +89,15 @@ class ControllerCliente {
         $erros['len2'] = 'A palavra precisa ter entre 5 e 255 caractéres.';
         return $this->response->setContent($this->twig->render('tiposcliente/novo.php',['erros' => $erros]));
       }
-      $tipos = new TipoClienteModelo();
-      $duplicidadeDescricao = $tipos->consultaDescricao($desc);
+      $clientesModelo = new TipoClienteModelo();
+      $duplicidadeDescricao = $clientesModelo->consultaDescricao($desc);
       if(isset($duplicidadeDescricao)){
         $erros['duplicidade'] = 'A descricao "'.$desc.'" já esta cadastrada.';
         return $this->response->setContent($this->twig->render('tiposcliente/novo.php',['erros' => $erros]));
       }else{
         $tipoCliente = new TipoCliente();
         $tipoCliente->setDescricao($desc);
-        $tipos->salvar($tipoCliente);
+        $clientesModelo->salvar($tipoCliente);
         $destino = '/admin/tiposcliente';
         $redirecionar = new RedirectResponse($destino);
         $redirecionar->send();
@@ -111,10 +111,10 @@ class ControllerCliente {
   }
   public function atualizar() {
     if ($this->sessao->existe('usuario')){
-      $tipos = new TipoClienteModelo();
+      $clientesModelo = new TipoClienteModelo();
       $erros = [];
       $id = $this->contexto->get('id');
-      $tipoCliente = $tipos->getTipoCliente($id);
+      $tipoCliente = $clientesModelo->getTipoCliente($id);
       $desc = trim($this->contexto->get('descricao'));
       if(!is_numeric($id)){
         $erros['id'] = 'Id inválido';
@@ -127,7 +127,7 @@ class ControllerCliente {
         $erros['chu'] = 'não sei';
         return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['erros' => $erros,'tipocliente' => $tipoCliente]));
       }
-      $duplicidadeDescricao = $tipos->consultaDescricaoComExcessaoId($desc,$id);
+      $duplicidadeDescricao = $clientesModelo->consultaDescricaoComExcessaoId($desc,$id);
       if(isset($duplicidadeDescricao)){
         $erros['duplicidade'] = 'A descricao "'.$desc.'" já esta cadastrada.';
         return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['erros' => $erros,'tipocliente' => $tipoCliente]));
@@ -135,7 +135,7 @@ class ControllerCliente {
         $tipoCliente = new TipoCliente();
         $tipoCliente->setDescricao($desc);
         $tipoCliente->setId($id);
-        $tipos->atualizar($tipoCliente);
+        $clientesModelo->atualizar($tipoCliente);
         $destino = '/admin/tiposcliente';
         $redirecionar = new RedirectResponse($destino);
         $redirecionar->send();

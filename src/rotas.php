@@ -42,6 +42,27 @@ $rotas->add('atualizarTipoCliente', new Route('/admin/tiposcliente/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
             "method" => 'atualizar')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE TIPOS DE CLIENTES        */
+/*      INICIO DAS ROTAS PARA MANUTENÇÃO DE CLIENTES        */
+$rotas->add('clientes', new Route('/admin/clientes',
+        array('_controller' => 'PPI2\Controller\ControllerCliente',
+            "method" => 'index')));
+
+$rotas->add('novoCliente', new Route('/admin/cliente/novo',
+        array('_controller' => 'PPI2\Controller\ControllerCliente',
+            "method" => 'novo')));
+
+$rotas->add('salvarCliente', new Route('/admin/cliente/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerCliente',
+            "method" => 'salvar')));
+
+$rotas->add('editCliente', new Route('/admin/cliente/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerCliente',
+            "method" => 'editar','suffix' => '')));
+
+$rotas->add('atualizarCliente', new Route('/admin/cliente/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerCliente',
+            "method" => 'atualizar')));
+/*      FIM DAS ROTAS PARA MANUTENÇÃO DE CLIENTES        */
 
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
