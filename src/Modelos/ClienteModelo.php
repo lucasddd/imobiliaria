@@ -37,9 +37,20 @@ class ClienteModelo {
     function salvar(Cliente $cliente) {
 
         try {
-            $sql = 'insert into clientes (nome) values(upper(:nome))';
+            $sql = 'insert into clientes (nome,cpf,rg,datanascimento,endereco,
+                bairro,cidade,cep,telefone,status) values(upper(:nome),
+                :cpf,:rg,:datanascimento,upper(:endereco),upper(:bairro),
+                upper(:cidade),:cep,:telefone,1)';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':nome', $cliente->getnome());
+            $p_sql->bindValue(':nome', $cliente->getNome());
+            $p_sql->bindValue(':cpf', $cliente->getCpf());
+            $p_sql->bindValue(':rg', $cliente->getRg());
+            $p_sql->bindValue(':datanascimento', $cliente->getDataNascimento());
+            $p_sql->bindValue(':endereco', $cliente->getEndereco());
+            $p_sql->bindValue(':bairro', $cliente->getBairro());
+            $p_sql->bindValue(':cidade', $cliente->getCidade());
+            $p_sql->bindValue(':cep', $cliente->getCep());
+            $p_sql->bindValue(':telefone', $cliente->getTelefone());
             if ($p_sql->execute())
                 return Conexao::getInstancia()->lastInsertId();
             return null;

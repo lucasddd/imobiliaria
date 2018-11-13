@@ -37,13 +37,13 @@
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Telefone</span>
+						<span class="input-group-text">Tel.</span>
 					</div>
 					<input type="text" name="telefone" class="form-control"/>
 					<div class="input-group-prepend">
-						<span class="input-group-text">Data de nasc.</span>
+						<span class="input-group-text">Nasc.</span>
 					</div>
-					<input type="text" name="datanascimento" class="form-control"/>
+					<input type="date" name="datanascimento" class="form-control"/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
