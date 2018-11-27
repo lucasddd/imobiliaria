@@ -32,7 +32,14 @@ class ControllerTipoImovel {
       }else{
         $tipoImoveis = $tipos->listar();
       }
-      return $this->response->setContent($this->twig->render('tipoimoveis/index.php',['tiposimoveis' => $tipoImoveis]));
+      $listImoveis = array();
+      foreach ($tipoImoveis as $key => $tipoImovel) {
+        $tipoIm = new TipoImovel();
+        $tipoIm->setId($tipoImovel->id);
+        $tipoIm->setDescricao($tipoImovel->descricao);
+        $listImoveis[$key] = $tipoIm;
+      }
+      return $this->response->setContent($this->twig->render('tipoimoveis/index.php',['tiposimoveis' => $listImoveis]));
     }else{
       $destino = '/';
       $redirecionar = new RedirectResponse($destino);
@@ -84,9 +91,9 @@ class ControllerTipoImovel {
     if ($this->sessao->existe('usuario')){
       $erros = [];
       $desc = trim($this->contexto->get('descricao'));
-      if(strlen($desc) < 5 || strlen($desc) > 255){
+      if(strlen($desc) < 3 || strlen($desc) > 255){
         $erros['len'] = 'Tamanho do texto na descrição inválido.';
-        $erros['len2'] = 'A palavra precisa ter entre 5 e 255 caractéres.';
+        $erros['len2'] = 'A palavra precisa ter entre 3 e 255 caractéres.';
         return $this->response->setContent($this->twig->render('tipoimoveis/novo.php',['erros' => $erros]));
       }
       $tipos = new TipoImovelModelo();
@@ -119,9 +126,9 @@ class ControllerTipoImovel {
       if(!is_numeric($id)){
         $erros['id'] = 'Id inválido';
       }
-      if(strlen($desc) < 5 || strlen($desc) > 255){
+      if(strlen($desc) < 3 || strlen($desc) > 255){
         $erros['len'] = 'Tamanho do texto na descrição inválido.';
-        $erros['len2'] = 'A palavra precisa ter entre 5 e 255 caractéres.';
+        $erros['len2'] = 'A palavra precisa ter entre 3 e 255 caractéres.';
       }
       if(!empty($erros)){
         return $this->response->setContent($this->twig->render('tipoimoveis/editar.php',['erros' => $erros,'tipoimovel' => $tipoImovel]));

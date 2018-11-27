@@ -24,8 +24,8 @@
 			<tbody id="conteudocateg">
 				{% for tipoimovel in tiposimoveis %}
 				<tr>
-					<td>{{tipoimovel.id}}</td>
-					<td>{{tipoimovel.descricao}}</td>
+					<td>{{tipoimovel.getId()}}</td>
+					<td>{{tipoimovel.getDescricao()}}</td>
 					<td>
 						<a href="/admin/tiposimoveis/editar/{{tipoimovel.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
 					</td>
@@ -44,7 +44,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 		</div>
-		<span id ="detalhestipoimovel" class="">{tiposimoveis|length}} tipos de imovéis cadastrado(s).</span>
+		<span id ="detalhestipoimovel" class="">{{tiposimoveis|length}} tipos de imovéis cadastrado(s).</span>
 	</div>
 
 
