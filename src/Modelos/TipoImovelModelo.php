@@ -15,7 +15,15 @@ class TipoImovelModelo {
             $sql = 'select * from tipo_imovel order by descricao';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->execute();
-            return $p_sql->fetchAll(PDO::FETCH_OBJ);
+            $tipoImoveis = $p_sql->fetchAll(PDO::FETCH_OBJ);
+            $listTipoImoveis = array();
+            foreach ($tipoImoveis as $key => $tipoImovel) {
+                $tipoIm = new TipoImovel();
+                $tipoIm->setId($tipoImovel->id);
+                $tipoIm->setDescricao($tipoImovel->descricao);
+                $listTipoImoveis[$key] = $tipoIm;
+            }
+            return $listTipoImoveis;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;
         }
@@ -27,7 +35,15 @@ class TipoImovelModelo {
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':busca', "%".$palavra."%");
             $p_sql->execute();
-            return $p_sql->fetchAll(PDO::FETCH_OBJ);
+            $tipoImoveis = $p_sql->fetchAll(PDO::FETCH_OBJ);
+            $listImoveis = array();
+            foreach ($tipoImoveis as $key => $tipoImovel) {
+                $tipoIm = new TipoImovel();
+                $tipoIm->setId($tipoImovel->id);
+                $tipoIm->setDescricao($tipoImovel->descricao);
+                $listImoveis[$key] = $tipoIm;
+            }
+            return $listImoveis;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;
         }

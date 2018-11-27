@@ -32,14 +32,7 @@ class ControllerTipoImovel {
       }else{
         $tipoImoveis = $tipos->listar();
       }
-      $listImoveis = array();
-      foreach ($tipoImoveis as $key => $tipoImovel) {
-        $tipoIm = new TipoImovel();
-        $tipoIm->setId($tipoImovel->id);
-        $tipoIm->setDescricao($tipoImovel->descricao);
-        $listImoveis[$key] = $tipoIm;
-      }
-      return $this->response->setContent($this->twig->render('tipoimoveis/index.php',['tiposimoveis' => $listImoveis]));
+      return $this->response->setContent($this->twig->render('tipoimoveis/index.php',['tiposimoveis' => $tipoImoveis]));
     }else{
       $destino = '/';
       $redirecionar = new RedirectResponse($destino);

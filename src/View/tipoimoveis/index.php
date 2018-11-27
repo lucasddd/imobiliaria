@@ -28,6 +28,7 @@
 					<td>{{tipoimovel.getDescricao()}}</td>
 					<td>
 						<a href="/admin/tiposimoveis/editar/{{tipoimovel.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
+						{{tipoimovel.getImoveis() ? 'sim' : 'não'}}
 					</td>
 				</tr>
 				{% endfor %}

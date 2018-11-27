@@ -2,6 +2,8 @@
 
 namespace PPI2\Entidades;
 
+use PPI2\Modelos\ImovelModelo;
+
 class TipoImovel {
     
     private $id;
@@ -21,4 +23,8 @@ class TipoImovel {
         $this->descricao = $descricao;
     }
     
+    function getImoveis(){
+        $imovelModelo = new ImovelModelo();
+        return $imovelModelo->getImoveisPeloTipo($this->id);
+    }
 }
