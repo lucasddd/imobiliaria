@@ -63,6 +63,27 @@ $rotas->add('atualizarCliente', new Route('/admin/cliente/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerCliente',
             "method" => 'atualizar')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE CLIENTES        */
+/*      INICIO DAS ROTAS PARA MANUTENÇÃO DE TIPOS DE IMOVEIS        */
+$rotas->add('tiposImovel', new Route('/admin/tiposimoveis',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'index')));
+
+$rotas->add('novoTipoImovel', new Route('/admin/tiposimoveis/novo',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'novo', 'suffix' => '')));
+
+$rotas->add('salvarTipoImovel', new Route('/admin/tiposimoveis/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'salvar')));
+
+$rotas->add('editTipoImovel', new Route('/admin/tiposimoveis/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'editar','suffix' => '')));
+
+$rotas->add('atualizarTipoImovel', new Route('/admin/tiposimoveis/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'atualizar')));
+/*      FIM DAS ROTAS PARA MANUTENÇÃO DE TIPOS DE IMOVEIS        */
 
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));

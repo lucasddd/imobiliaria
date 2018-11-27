@@ -1,13 +1,13 @@
 {% extends "master.twig"%}
 {% block conteudo %}
 <div class="col-md-12">
-	<h4 class="text-center text-success">.:: Tipos de cliente ::.</h4>
+	<h4 class="text-center text-success">.:: Tipos de imóveis ::.</h4>
 	<div class="row">
 		<div class="col-md-6">
-			<a href="/admin/tiposcliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
+			<a href="/admin/tiposimoveis/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="col-md-6">
-			<form action="/admin/tiposcliente" method="GET">
+			<form action="/admin/tiposimoveis" method="GET">
 			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
 			</form>
 		</div>
@@ -22,12 +22,12 @@
 				</tr>
 			</thead>
 			<tbody id="conteudocateg">
-				{% for tipocliente in tipoclientes %}
+				{% for tipoimovel in tiposimoveis %}
 				<tr>
-					<td>{{tipocliente.id}}</td>
-					<td>{{tipocliente.descricao}}</td>
+					<td>{{tipoimovel.id}}</td>
+					<td>{{tipoimovel.descricao}}</td>
 					<td>
-						<a href="/admin/tiposcliente/editar/{{tipocliente.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
+						<a href="/admin/tiposimoveis/editar/{{tipoimovel.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
 					</td>
 				</tr>
 				{% endfor %}
@@ -44,7 +44,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 		</div>
-		<span id ="detalhestipocliente" class="">{{tipoclientes|length}} tipos de clientes cadastrado(s).</span>
+		<span id ="detalhestipoimovel" class="">{tiposimoveis|length}} tipos de imovéis cadastrado(s).</span>
 	</div>
 
 
