@@ -72,7 +72,7 @@
 			</div>
 			<div class="text-center">
 				<button class="btn btn-success" id="btnSalvarTipoCliente">Salvar</button>
-				<a href="/admin/tiposcliente" class="btn btn-danger">Cancelar</a>
+				<a href="/admin/clientes" class="btn btn-danger">Cancelar</a>
 				<div id="processando" style="display: none;">
 					<img src="/img/ajax-loader.gif" />
 				</div>

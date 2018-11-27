@@ -52,7 +52,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 		</div>
-		<span id ="detalhescliente" class="">Total de: {{clientes|length}} registro(s).</span>
+		<span id ="detalhescliente" class="">{{clientes|length}} cliente(s) cadastrados.</span>
 	</div>
 
 
