@@ -24,7 +24,10 @@ class ClienteModelo {
     function busca($palavra) {
 
         try {
-            $sql = "select * from clientes where nome LIKE :busca order by nome";
+            $sql = "select * from clientes where nome LIKE :busca or 
+            cpf LIKE :busca or endereco LIKE :busca or cidade LIKE :busca 
+            or bairro LIKE :busca or cep LIKE :busca or rg LIKE :busca 
+            or telefone LIKE :busca order by nome";
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':busca', "%".$palavra."%");
             $p_sql->execute();
@@ -61,12 +64,23 @@ class ClienteModelo {
     function atualizar(Cliente $cliente) {
 
         try {
-            $sql = 'update clientes set nome = upper(:nome) where id = :id';
+            $sql = 'update clientes set nome = upper(:nome),cpf = :cpf,rg = :rg,
+                datanascimento = :datanascimento,endereco = upper(:endereco),
+                bairro = upper(:bairro),cidade = upper(:cidade),cep = :cep,
+                telefone = :telefone where id = :id';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':nome', $cliente->getnome());
             $p_sql->bindValue(':id', $cliente->getId());
+            $p_sql->bindValue(':nome', $cliente->getNome());
+            $p_sql->bindValue(':cpf', $cliente->getCpf());
+            $p_sql->bindValue(':rg', $cliente->getRg());
+            $p_sql->bindValue(':datanascimento', $cliente->getDataNascimento());
+            $p_sql->bindValue(':endereco', $cliente->getEndereco());
+            $p_sql->bindValue(':bairro', $cliente->getBairro());
+            $p_sql->bindValue(':cidade', $cliente->getCidade());
+            $p_sql->bindValue(':cep', $cliente->getCep());
+            $p_sql->bindValue(':telefone', $cliente->getTelefone());
             if ($p_sql->execute())
-                return $cliente->getId();
+                return $cliente;
             return null;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;

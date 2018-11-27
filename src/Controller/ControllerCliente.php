@@ -101,17 +101,17 @@ public function show() {
 public function editar($id) {
   if ($this->sessao->existe('usuario')){
     if(!is_numeric($id) || $id < 1){
-      $destino = '/admin/tiposcliente';
+      $destino = '/admin/clientes';
       $redirecionar = new RedirectResponse($destino);
       $redirecionar->send();
       return;   
     }
-    $clientesModelo = new TipoClienteModelo();
-    $tipoCliente = $clientesModelo->getTipoCliente($id);
-    if($tipoCliente != null){
-      return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['tipocliente' => $tipoCliente]));
+    $clientesModelo = new ClienteModelo();
+    $cliente = $clientesModelo->getCliente($id);
+    if($cliente != null){
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['cliente' => $cliente]));
     }
-    $destino = '/admin/tiposcliente';
+    $destino = '/admin/clientes';
     $redirecionar = new RedirectResponse($destino);
     $redirecionar->send();
     return;
@@ -206,6 +206,89 @@ public function salvar() {
 }
 public function atualizar() {
   if ($this->sessao->existe('usuario')){
+    $erros = [];
+    $id = $this->contexto->get('id');
+    $clientesModelo = new ClienteModelo();
+    $cliente = $clientesModelo->getCliente($id);
+    if(!isset($cliente)){
+      $erros['id'] = 'Cliente não encontrado.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    $nome = trim($this->contexto->get('nome'));
+    $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
+    $rg = trim($this->contexto->get('rg'));
+    $telefone = preg_replace("/[^0-9]/", "", $this->contexto->get('telefone'));
+    $dataNasc = trim($this->contexto->get('datanascimento'));
+    print_r("Nasc: ".$dataNasc);
+    $endereco = trim($this->contexto->get('endereco'));
+    $bairro = trim($this->contexto->get('bairro'));
+    $cidade = trim($this->contexto->get('cidade'));
+    $cep = preg_replace("/[^0-9]/", "", $this->contexto->get('cep'));
+    if (!empty($dataNasc)) {
+      $data = $dataNasc;
+      $data = explode('/', $data);
+      //print_r("data aqui ".!empty($data[0]));
+      if(empty($data)){
+        $dia = $data[0];
+        $mes = $data[1];
+        $ano = $data[2];
+        $dataNasc = $ano . '-' . $mes . '-' . $dia;
+      }
+    }else{
+      $erros['nasc'] = 'Data de nascimento é de preenchimento obrigatório';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    //print_r("data nasc: ".$cpf);
+    //die();
+    if(strlen($nome) < 10 || strlen($nome) > 255){
+      $erros['len'] = 'Nome precisa ter entre 10 e 255 caractéres.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    if(strlen($endereco) < 5 || strlen($endereco) > 255){
+      $erros['len'] = 'Endereço precisa ter entre 5 e 255 caractéres.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    if(isset($cep) && strlen($cep) != 8){
+      $erros['cep'] = 'Cep inválido.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    if(isset($telefone) && strlen($telefone) < 11){
+      $erros['telefone'] = 'Telefone inválido.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }
+    if(!$this->validaCPF($cpf)){
+      $erros['cpf'] = 'Cpf inválido.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));        
+    }
+    $duplicidadeCpf = $clientesModelo->consultaCpfComExcessaoId($cpf,$id);
+    if(isset($duplicidadeCpf)){
+      $erros['duplicidade'] = 'O cpf "'.$cpf.'" já esta cadastrado.';
+      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    }else{
+      $cliente = new Cliente();
+      $cliente->setId($id);
+      $cliente->setNome($nome);
+      $cliente->setCpf($cpf);
+      $cliente->setRg($rg);
+      $cliente->setTelefone($telefone);
+      $cliente->setDataNascimento($dataNasc);
+      $cliente->setEndereco($endereco);
+      $cliente->setBairro($bairro);
+      $cliente->setCidade($cidade);
+      $cliente->setCep($cep);
+      $clientesModelo->atualizar($cliente);
+      $destino = '/admin/clientes';
+      $redirecionar = new RedirectResponse($destino);
+      $redirecionar->send();
+    }
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+  }
+  return;
+  /*
+  if ($this->sessao->existe('usuario')){
     $clientesModelo = new TipoClienteModelo();
     $erros = [];
     $id = $this->contexto->get('id');
@@ -241,6 +324,7 @@ public function atualizar() {
     $redirecionar->send();
   }
   return;
+  */
 }
 public function cadastro() {
         // validação
