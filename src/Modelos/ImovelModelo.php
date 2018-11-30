@@ -36,23 +36,26 @@ class ImovelModelo {
         }
     }
 
-    function salvar(Cliente $cliente) {
+    function salvar(Imovel $imovel) {
 
         try {
-            $sql = 'insert into imoveis (nome,cpf,rg,datanascimento,endereco,
-                bairro,cidade,cep,telefone,status) values(upper(:nome),
-                :cpf,:rg,:datanascimento,upper(:endereco),upper(:bairro),
-                upper(:cidade),:cep,:telefone,1)';
+            $sql = 'insert into imoveis (endereco,bairro,tipo_imovel_id,
+                foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao) 
+                values(
+                upper(:endereco),:bairro,:tipo_imovel_id,:foto1,
+                :foto2,:foto3,1,:proprietario_id,:valor_venda,
+                :valor_locacao
+                )';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':nome', $cliente->getNome());
-            $p_sql->bindValue(':cpf', $cliente->getCpf());
-            $p_sql->bindValue(':rg', $cliente->getRg());
-            $p_sql->bindValue(':datanascimento', $cliente->getDataNascimento());
-            $p_sql->bindValue(':endereco', $cliente->getEndereco());
-            $p_sql->bindValue(':bairro', $cliente->getBairro());
-            $p_sql->bindValue(':cidade', $cliente->getCidade());
-            $p_sql->bindValue(':cep', $cliente->getCep());
-            $p_sql->bindValue(':telefone', $cliente->getTelefone());
+            $p_sql->bindValue(':endereco', $imovel->getEndereco());
+            $p_sql->bindValue(':bairro', $imovel->getBairro());
+            $p_sql->bindValue(':tipo_imovel_id', $imovel->getTipoImovel()->getId());
+            $p_sql->bindValue(':foto1', $imovel->getFoto1());
+            $p_sql->bindValue(':foto2', $imovel->getFoto2());
+            $p_sql->bindValue(':foto3', $imovel->getFoto3());
+            $p_sql->bindValue(':proprietario_id', $imovel->getLocatario()->getId());
+            $p_sql->bindValue(':valor_venda', $imovel->getValorVenda());
+            $p_sql->bindValue(':valor_locacao', $imovel->getValorLocacao());
             if ($p_sql->execute())
                 return Conexao::getInstancia()->lastInsertId();
             return null;

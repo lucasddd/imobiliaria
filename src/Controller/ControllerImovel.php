@@ -124,6 +124,7 @@ public function editar($id) {
 public function novo() {
   if ($this->sessao->existe('usuario')){
     $erros = [];
+    $imovel = new Imovel();
     $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
     //print_r($cpf);
     //die();
@@ -150,10 +151,10 @@ public function novo() {
       $locatario->setBairro($cliente_['bairro']);
       $locatario->setCidade($cliente_['cidade']);
       $locatario->setCep($cliente_['cep']);
-      return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario,'tipos' => $tipos]));        
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario,'imovel' => $imovel,'tipos' => $tipos,'imovel' => $imovel]));        
     }else{
       $erros['clientenaoencontrado'] = 'Cliente não encontrado XD.';
-      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));        
+      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['locatario' => $locatario,'imovel' => $imovel,'tipos' => $tipos,'imovel' => $imovel]));        
     }
   }else{
     $destino = '/';
@@ -175,59 +176,103 @@ public function informecpf() {
 public function salvar() {
   if ($this->sessao->existe('usuario')){
     $erros = [];
-    $tipoModelo = new TipoImovelModelo();
-    $clienteModelo = new ClienteModelo();
-    $locatario = new Cliente();
-    $locatario = $clienteModelo->getClientePeloId($this->contexto->get('id'));
-    $tipoImovel = $this->contexto->get('tipoimovel');
-    if(!is_numeric($tipoImovel)){
-      $erros['tipoimovel'] = "Tipo de imóvel inválido.";
-      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
-    }
-    if($tipoImovel < 1){
-      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
-      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
-    }
-    $tipo = $tipoModelo->getTipoImovelPeloId($tipoImovel);
-    if(!isset($tipo)){
-      $erros['tipoimovel'] = "Tipo de imóvel não cadastrado.";
-      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
-    }
-    
+    $imovel = new Imovel();
     $endereco = trim($this->contexto->get('endereco'));
     $bairro = trim($this->contexto->get('bairro'));
     $valorLocacao = $this->contexto->get('valorlocacao');
     $valorVenda = $this->contexto->get('valorvenda');
+    $imovel->setEndereco($endereco);
+    $imovel->setBairro($bairro);
+    $imovel->setValorLocacao($valorLocacao);
+    $imovel->setValorVenda($valorVenda);
+    $tipoModelo = new TipoImovelModelo();
+    $clienteModelo = new ClienteModelo();
+    $imovelModelo = new ImovelModelo();
+    $locatario = new Cliente();
+    $locatario = $clienteModelo->getClientePeloId($this->contexto->get('id'));
+    $tipoImovel = $this->contexto->get('tipoimovel');
     if(strlen($endereco) < 5 || strlen($endereco) > 255){
       $erros['len'] = 'Endereço precisa ter entre 5 e 255 caractéres.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
     }
     if(strlen($bairro) < 5 || strlen($bairro) > 90){
       $erros['len2'] = 'Bairro precisa ter entre 5 e 90 caractéres.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
+    }
+    if(!is_numeric($tipoImovel)){
+      $erros['tipoimovel'] = "Tipo de imóvel inválido.";
+    }
+    if($tipoImovel < 1){
+      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
+    }
+    $tipo = $tipoModelo->getTipoImovelPeloId($tipoImovel);
+    if(!isset($tipo)){
+      $erros['tipoimovel'] = "Tipo de imóvel não cadastrado.";
     }
     
-    $clientesModelo = new ClienteModelo();
-    $duplicidadeCpf = $clientesModelo->consultaCpf($cpf);
-    if(isset($duplicidadeCpf)){
-      $erros['duplicidade'] = 'O cpf "'.$cpf.'" já esta cadastrado.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
-    }else{
-      $cliente = new Cliente();
-      $cliente->setNome($nome);
-      $cliente->setCpf($cpf);
-      $cliente->setRg($rg);
-      $cliente->setTelefone($telefone);
-      $cliente->setDataNascimento($dataNasc);
-      $cliente->setEndereco($endereco);
-      $cliente->setBairro($bairro);
-      $cliente->setCidade($cidade);
-      $cliente->setCep($cep);
-      $clientesModelo->salvar($cliente);
-      $destino = '/admin/clientes';
+    $foto0 = $this->contexto->files->get('foto0');
+    if(isset($foto0)){
+      if($foto0->getSize() > 1000000){
+        $erros['foto0'] = 'Foto 1 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto0->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão1'] = 'Coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '1-'.time().'.'.$ext;
+        if(move_uploaded_file($foto0->getPathName(), 'images/'.$fileName)){
+          $foto0 = $fileName;
+        }
+      }
+    }
+    $foto1 = $this->contexto->files->get('foto1');
+    if(isset($foto1)){
+      if($foto1->getSize() > 1000000){
+        $erros['foto1'] = 'Foto 2 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto1->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão2'] = 'Foto 2, coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '2-'.time().'.'.$ext;
+        if(move_uploaded_file($foto1->getPathName(), 'images/'.$fileName)){
+          $foto1 = $fileName;
+        }
+      }
+    }
+    $foto2 = $this->contexto->files->get('foto2');
+    if(isset($foto2)){
+      if($foto2->getSize() > 1000000){
+        $erros['foto2'] = 'Foto 3 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto2->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão3'] = 'Foto 3, coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '3-'.time().'.'.$ext;
+        if(move_uploaded_file($foto2->getPathName(), 'images/'.$fileName)){
+          $foto2 = $fileName;
+        }
+      }
+    }
+    if(!empty($erros)){
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario,'imovel' => $imovel]));
+    }
+    //print_r($this->contexto);
+    //die();
+    $imovel->setLocatario($locatario);
+    $imovel->setTipoImovel($tipo);
+    $imovel->setFoto1($foto0);
+    $imovel->setFoto2($foto1);
+    $imovel->setFoto3($foto2);
+    $imovelModelo->salvar($imovel);
+    if($imovelModelo){
+      $destino = '/admin/imoveis/informecpf';
       $redirecionar = new RedirectResponse($destino);
       $redirecionar->send();
+    }else{
+      $erros['ErroDB'] = "algo errada com o database...";
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario,'imovel' => $imovel]));
     }
+
   }else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);

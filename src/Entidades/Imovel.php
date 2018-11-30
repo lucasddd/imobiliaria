@@ -48,6 +48,9 @@ class Imovel {
     function getBairro(){
         return $this->bairro;
     }
+    function setBairro($bairro){
+        $this->bairro = $bairro;
+    }
     function getSituacao(){
         return $this->situacao;
     }

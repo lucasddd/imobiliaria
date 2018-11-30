@@ -43,13 +43,13 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text">Endereço</span>
 					</div>
-					<input type="text" name="endereco" class="form-control" required/>
+					<input type="text" name="endereco" class="form-control" value="{{imovel.getEndereco()}}" required/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Bairro</span>
 					</div>
-					<input type="text" name="bairro" class="form-control" required/>
+					<input type="text" name="bairro" class="form-control" value="{{imovel.getBairro()}}"required/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
@@ -66,29 +66,29 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text">Valor Locação</span>
 					</div>
-					<input type="text" name="valorlocacao" class="form-control" required/>
+					<input type="text" name="valorlocacao" class="form-control" value="{{imovel.getValorLocacao()}}" required/>
 					<div class="input-group-prepend">
 						<span class="input-group-text">Valor Venda</span>
 					</div>
-					<input type="text" name="valorvenda" class="form-control"/>
+					<input type="text" name="valorvenda" class="form-control" value="{{imovel.getValorVenda()}}"/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Foto 1 </span>
 					</div>
-					<input type="text" name="cep" class="form-control"/>
+					<input accept="image/*" class="btn btn-default form-control" id="foto0" name="foto0" type="file">
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Foto 2 </span>
 					</div>
-					<input type="text" name="cep" class="form-control"/>
+					<input accept="image/*" class="btn btn-default form-control" id="foto1" name="foto1" type="file">
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Foto 3 </span>
 					</div>
-					<input type="text" name="cep" class="form-control"/>
+					<input accept="image/*" class="btn btn-default form-control" id="foto2" name="foto2" type="file">
 				</div>
 			</div>
 			<div class="text-center">
