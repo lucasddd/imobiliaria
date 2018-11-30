@@ -112,11 +112,13 @@ class TipoImovelModelo {
             $p_sql->bindValue(':id',$id);
             $p_sql->execute();
             $p_sql->execute();
-            $tipo = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
-            $tipoImovel = new TipoImovel();
-            $tipoImovel->setId($tipo->id);
-            $tipoImovel->setDescricao($tipo->descricao);
-            
+            $tipoImovel = null;
+            if ($p_sql->rowCount() > 0) {
+                $tipo = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
+                $tipoImovel = new TipoImovel();
+                $tipoImovel->setId($tipo->id);
+                $tipoImovel->setDescricao($tipo->descricao);
+            }
             return $tipoImovel;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;

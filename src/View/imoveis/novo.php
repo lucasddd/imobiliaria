@@ -5,7 +5,7 @@
 <div class="col-md-12">
 	<h1 class="text-center text-success">Novo imóvel</h1>
 	<div class="col-md-8 offset-md-2 form-horizontal">
-		<form method="POST" action="/admin/cliente/salvar" accept-charset="UTF-8" enctype="multipart/form-data">
+		<form method="POST" action="/admin/imoveis/salvar" accept-charset="UTF-8" enctype="multipart/form-data">
 			<div class="form-group">
 				<h4 class="text-center text-success">Informações do proprietário (locatário)</h4>
 				<input type="hidden" class="form-control" id="id" name="id" value="{{locatario.getId()}}">
@@ -43,19 +43,19 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text">Endereço</span>
 					</div>
-					<input type="text" name="endereco" class="form-control"/>
+					<input type="text" name="endereco" class="form-control" required/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Bairro</span>
 					</div>
-					<input type="text" name="bairro" class="form-control"/>
+					<input type="text" name="bairro" class="form-control" required/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Tipo do imóvel </span>
 					</div>
-					<select class="btn btn-secondary">
+					<select name="tipoimovel" class="btn btn-secondary">
 						<option value="0">Selecione *</option>
 						{% for tipo in tipos %}
 						<option value="{{tipo.getId()}}">{{tipo.getDescricao()}}</option>

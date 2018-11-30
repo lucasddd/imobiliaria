@@ -164,7 +164,7 @@ public function novo() {
 }
 public function informecpf() {
   if ($this->sessao->existe('usuario'))
-    return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));
+    return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => '']));
   else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);
@@ -175,52 +175,38 @@ public function informecpf() {
 public function salvar() {
   if ($this->sessao->existe('usuario')){
     $erros = [];
-    $nome = trim($this->contexto->get('nome'));
-    $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
-    $rg = trim($this->contexto->get('rg'));
-    $telefone = preg_replace("/[^0-9]/", "", $this->contexto->get('telefone'));
-    $dataNasc = trim($this->contexto->get('datanascimento'));
-    print_r("Nasc: ".$dataNasc);
+    $tipoModelo = new TipoImovelModelo();
+    $clienteModelo = new ClienteModelo();
+    $locatario = new Cliente();
+    $locatario = $clienteModelo->getClientePeloId($this->contexto->get('id'));
+    $tipoImovel = $this->contexto->get('tipoimovel');
+    if(!is_numeric($tipoImovel)){
+      $erros['tipoimovel'] = "Tipo de imóvel inválido.";
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
+    }
+    if($tipoImovel < 1){
+      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
+    }
+    $tipo = $tipoModelo->getTipoImovelPeloId($tipoImovel);
+    if(!isset($tipo)){
+      $erros['tipoimovel'] = "Tipo de imóvel não cadastrado.";
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario]));
+    }
+    
     $endereco = trim($this->contexto->get('endereco'));
     $bairro = trim($this->contexto->get('bairro'));
-    $cidade = trim($this->contexto->get('cidade'));
-    $cep = preg_replace("/[^0-9]/", "", $this->contexto->get('cep'));
-    if (!empty($dataNasc)) {
-      $data = $dataNasc;
-      $data = explode('/', $data);
-      //print_r("data aqui ".!empty($data[0]));
-      if(empty($data)){
-        $dia = $data[0];
-        $mes = $data[1];
-        $ano = $data[2];
-        $dataNasc = $ano . '-' . $mes . '-' . $dia;
-      }
-    }else{
-      $erros['nasc'] = 'Data de nascimento é de preenchimento obrigatório';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
-    }
-    //print_r("data nasc: ".$cpf);
-    //die();
-    if(strlen($nome) < 10 || strlen($nome) > 255){
-      $erros['len'] = 'Nome precisa ter entre 10 e 255 caractéres.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
-    }
+    $valorLocacao = $this->contexto->get('valorlocacao');
+    $valorVenda = $this->contexto->get('valorvenda');
     if(strlen($endereco) < 5 || strlen($endereco) > 255){
       $erros['len'] = 'Endereço precisa ter entre 5 e 255 caractéres.';
       return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
     }
-    if(isset($cep) && strlen($cep) != 8){
-      $erros['cep'] = 'Cep inválido.';
+    if(strlen($bairro) < 5 || strlen($bairro) > 90){
+      $erros['len2'] = 'Bairro precisa ter entre 5 e 90 caractéres.';
       return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
     }
-    if(isset($telefone) && strlen($telefone) < 11){
-      $erros['telefone'] = 'Telefone inválido.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
-    }
-    if(!$this->validaCPF($cpf)){
-      $erros['cpf'] = 'Cpf inválido.';
-      return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));        
-    }
+    
     $clientesModelo = new ClienteModelo();
     $duplicidadeCpf = $clientesModelo->consultaCpf($cpf);
     if(isset($duplicidadeCpf)){
