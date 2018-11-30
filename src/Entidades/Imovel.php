@@ -19,6 +19,8 @@ class Imovel {
     private $criadoEm;
     private $locatario;
     private $locador;
+    private $valorVenda;
+    private $valorLocacao;
     
     /*
     function __construct($nome,$email,$senha,$cpf,$status,$permissao) {
@@ -93,5 +95,17 @@ class Imovel {
     }
     function getLocador(){
         return $this->locador;
+    }
+    function setValorVenda($valorVenda){
+        $this->valorVenda = $valorVenda;
+    }
+    function getValorVenda(){
+        return $this->valorVenda;
+    }
+    function setValorLocacao($valorLocacao){
+        $this->valorLocacao = $valorLocacao;
+    }
+    function getValorLocacao(){
+        return $this->valorLocacao;
     }
 }

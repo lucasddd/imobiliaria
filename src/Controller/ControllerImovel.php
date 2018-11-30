@@ -136,6 +136,8 @@ public function novo() {
     }
     $clienteModelo = new ClienteModelo();
     $locatario = new Cliente();
+    $tiposModelo = new TipoImovelModelo();
+    $tipos = $tiposModelo->listar();
     $cliente_ = $clienteModelo->consultaCpf($cpf);
     if(isset($cliente_)){
       $locatario->setId($cliente_['id']);
@@ -148,7 +150,7 @@ public function novo() {
       $locatario->setBairro($cliente_['bairro']);
       $locatario->setCidade($cliente_['cidade']);
       $locatario->setCep($cliente_['cep']);
-      return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario]));        
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario,'tipos' => $tipos]));        
     }else{
       $erros['clientenaoencontrado'] = 'Cliente não encontrado XD.';
       return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));        

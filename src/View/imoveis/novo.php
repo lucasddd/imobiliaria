@@ -41,16 +41,6 @@
 				<h4 class="text-center text-success">Informações do imóvel</h4>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Tel.</span>
-					</div>
-					<input type="text" name="telefone" class="form-control"/>
-					<div class="input-group-prepend">
-						<span class="input-group-text">Nasc.</span>
-					</div>
-					<input type="date" name="datanascimento" class="form-control"/>
-				</div>
-				<div class="input-group form-group">
-					<div class="input-group-prepend">
 						<span class="input-group-text">Endereço</span>
 					</div>
 					<input type="text" name="endereco" class="form-control"/>
@@ -63,13 +53,40 @@
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Cidade</span>
+						<span class="input-group-text">Tipo do imóvel </span>
 					</div>
-					<input type="text" name="cidade" class="form-control"/>
+					<select class="btn btn-secondary">
+						<option value="0">Selecione *</option>
+						{% for tipo in tipos %}
+						<option value="{{tipo.getId()}}">{{tipo.getDescricao()}}</option>
+						{% endfor %}
+					</select>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Cep</span>
+						<span class="input-group-text">Valor Locação</span>
+					</div>
+					<input type="text" name="valorlocacao" class="form-control" required/>
+					<div class="input-group-prepend">
+						<span class="input-group-text">Valor Venda</span>
+					</div>
+					<input type="text" name="valorvenda" class="form-control"/>
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Foto 1 </span>
+					</div>
+					<input type="text" name="cep" class="form-control"/>
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Foto 2 </span>
+					</div>
+					<input type="text" name="cep" class="form-control"/>
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Foto 3 </span>
 					</div>
 					<input type="text" name="cep" class="form-control"/>
 				</div>
