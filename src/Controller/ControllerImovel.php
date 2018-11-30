@@ -8,9 +8,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
 use PPI2\Entidades\Cliente;
 use PPI2\Modelos\ClienteModelo;
+use PPI2\Entidades\Imovel;
+use PPI2\Modelos\ImovelModelo;
+use PPI2\Entidades\TipoImovel;
+use PPI2\Modelos\TipoImovelModelo;
 use PPI2\Util\Sessao;
 
-class ControllerCliente {
+class ControllerImovel {
 
   private $response;
   private $contexto;
@@ -118,8 +122,47 @@ public function editar($id) {
   } 
 }
 public function novo() {
+  if ($this->sessao->existe('usuario')){
+    $erros = [];
+    $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
+    //print_r($cpf);
+    //die();
+    if(!$this->validaCPF($cpf)){
+      $erros['cpf'] = 'Cpf '.$this->contexto->get('cpf').' inválido.';
+      //$destino = '/admin/imoveis/informecpf';
+      //$redirecionar = new RedirectResponse($destino);
+      //$redirecionar->send();
+      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));        
+    }
+    $clienteModelo = new ClienteModelo();
+    $locatario = new Cliente();
+    $cliente_ = $clienteModelo->consultaCpf($cpf);
+    if(isset($cliente_)){
+      $locatario->setId($cliente_['id']);
+      $locatario->setNome($cliente_['nome']);
+      $locatario->setCpf($cliente_['cpf']);
+      $locatario->setRg($cliente_['rg']);
+      $locatario->setTelefone($cliente_['telefone']);
+      $locatario->setDataNascimento($cliente_['datanascimento']);
+      $locatario->setEndereco($cliente_['endereco']);
+      $locatario->setBairro($cliente_['bairro']);
+      $locatario->setCidade($cliente_['cidade']);
+      $locatario->setCep($cliente_['cep']);
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario]));        
+    }else{
+      $erros['clientenaoencontrado'] = 'Cliente não encontrado XD.';
+      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));        
+    }
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+
+  } 
+}
+public function informecpf() {
   if ($this->sessao->existe('usuario'))
-    return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => '']));
+    return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));
   else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);
@@ -135,7 +178,7 @@ public function salvar() {
     $rg = trim($this->contexto->get('rg'));
     $telefone = preg_replace("/[^0-9]/", "", $this->contexto->get('telefone'));
     $dataNasc = trim($this->contexto->get('datanascimento'));
-//    print_r("Nasc: ".$dataNasc);
+    print_r("Nasc: ".$dataNasc);
     $endereco = trim($this->contexto->get('endereco'));
     $bairro = trim($this->contexto->get('bairro'));
     $cidade = trim($this->contexto->get('cidade'));
@@ -219,7 +262,7 @@ public function atualizar() {
     $rg = trim($this->contexto->get('rg'));
     $telefone = preg_replace("/[^0-9]/", "", $this->contexto->get('telefone'));
     $dataNasc = trim($this->contexto->get('datanascimento'));
-//    print_r("Nasc: ".$dataNasc);
+    print_r("Nasc: ".$dataNasc);
     $endereco = trim($this->contexto->get('endereco'));
     $bairro = trim($this->contexto->get('bairro'));
     $cidade = trim($this->contexto->get('cidade'));

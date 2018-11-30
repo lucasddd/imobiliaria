@@ -84,7 +84,31 @@ $rotas->add('atualizarTipoImovel', new Route('/admin/tiposimoveis/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
             "method" => 'atualizar')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE TIPOS DE IMOVEIS        */
+/*      INICIO DAS ROTAS PARA MANUTENÇÃO DE IMOVEIS        */
+$rotas->add('imoveis', new Route('/admin/imoveis',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'index')));
 
+$rotas->add('novoImovel', new Route('/admin/imoveis/novo',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'novo', 'suffix' => '')));
+
+$rotas->add('informecpf', new Route('/admin/imoveis/informecpf',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'informecpf', 'suffix' => '')));
+
+$rotas->add('salvarImovel', new Route('/admin/imoveis/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'salvar')));
+
+$rotas->add('editImovel', new Route('/admin/imoveis/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'editar','suffix' => '')));
+
+$rotas->add('atualizarImovel', new Route('/admin/imoveis/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'atualizar')));
+/*      FIM DAS ROTAS PARA MANUTENÇÃO DE IMOVEIS        */
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
 

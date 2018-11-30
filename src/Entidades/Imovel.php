@@ -4,9 +4,10 @@ namespace PPI2\Entidades;
 
 use PPI2\Entidades\Cliente;
 use PPI2\Entidades\TipoImovel;
+use PPI2\Modelos\TipoImovelModelo;
 
 class Imovel {
-    
+
     private $id;
     private $endereco;
     private $bairro;
@@ -17,6 +18,7 @@ class Imovel {
     private $situacao;
     private $criadoEm;
     private $locatario;
+    private $locador;
     
     /*
     function __construct($nome,$email,$senha,$cpf,$status,$permissao) {
@@ -75,7 +77,7 @@ class Imovel {
         $this->criadoEm = $criadoEm;
     }
     function getTipoImovel(){
-        $return $this->tipoImovel;
+        return $this->tipoImovel;
     }
     function setTipoImovel(TipoImovel $tipoImovel){
         $this->tipoImovel = $tipoImovel;
@@ -85,5 +87,11 @@ class Imovel {
     }
     function setLocatario(Cliente $locatario){
         $this->locatario = $locatario;
+    }
+    function setLocador(Cliente $locador){
+        $this->locador = $locador;
+    }
+    function getLocador(){
+        return $this->locador;
     }
 }

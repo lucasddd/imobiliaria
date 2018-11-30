@@ -105,6 +105,23 @@ class TipoImovelModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    function getTipoImovelPeloId($id) {
+        try {
+            $sql = 'select * from tipo_imovel where id = :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            $p_sql->execute();
+            $tipo = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
+            $tipoImovel = new TipoImovel();
+            $tipoImovel->setId($tipo->id);
+            $tipoImovel->setDescricao($tipo->descricao);
+            
+            return $tipoImovel;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
     function consultaDescricaoComExcessaoId($desc,$id) {
         try {
             $sql = 'select * from tipo_imovel where descricao = upper(:desc) and id != :id';
