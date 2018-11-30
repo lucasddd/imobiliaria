@@ -21,7 +21,7 @@
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
-			<tbody id="conteudocateg">
+			<tbody id="conteudotipocliente">
 				{% for tipocliente in tipoclientes %}
 				<tr>
 					<td>{{tipocliente.id}}</td>

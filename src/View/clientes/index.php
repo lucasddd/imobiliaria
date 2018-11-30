@@ -8,7 +8,7 @@
 		</div>
 		<div class="col-md-6">
 			<form action="/admin/clientes" method="GET">
-			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
+				<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
 			</form>
 		</div>
 	</div>
@@ -25,14 +25,19 @@
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
-			<tbody id="conteudocateg">
+			<tbody id="conteudocliente">
 				{% for cliente in clientes %}
 				<tr>
 					<td>{{cliente.id}}</td>
 					<td>{{cliente.nome}}</td>
 					<td>{{cliente.cpf}}</td>
 					<td>{{cliente.telefone}}</td>
-					<td>locatário</td>
+					<td>
+						<form method="POST" action="/admin/imoveis/novo">
+							<input type="hidden" name="cpf" value="{{cliente.cpf}}">
+							<button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i></button>
+						</form>
+					</td>
 					<td>locador</td>
 					<td>
 						<a href="/admin/cliente/editar/{{cliente.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>

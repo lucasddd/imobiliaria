@@ -77,13 +77,13 @@ class ControllerImovel {
 public function index() {
   if ($this->sessao->existe('usuario')){
     $busca = $this->contexto->get('busca');
-    $clientesModelo = new ClienteModelo();
+    $imoveisModelo = new ImovelModelo();
     if(isset($busca)){
-      $clientes = $clientesModelo->busca($busca);
+      $imoveis = $imoveisModelo->busca($busca);
     }else{
-      $clientes = $clientesModelo->listar();
+      $imoveis = $imoveisModelo->listar();
     }
-    return $this->response->setContent($this->twig->render('clientes/index.php',['clientes' => $clientes]));
+    return $this->response->setContent($this->twig->render('imoveis/index.php',['imoveis' => $imoveis]));
   }else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);

@@ -1,13 +1,13 @@
 {% extends "master.twig"%}
 {% block conteudo %}
 <div class="col-md-12">
-	<h4 class="text-center text-success">.:: Lista de Clientes ::.</h4>
+	<h4 class="text-center text-success">.:: Lista de imoveis ::.</h4>
 	<div class="row">
 		<div class="col-md-6">
-			<a href="/admin/cliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
+			<a href="/admin/imoveis/informecpf" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="col-md-6">
-			<form action="/admin/clientes" method="GET">
+			<form action="/admin/imoveis" method="GET">
 			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
 			</form>
 		</div>
@@ -17,25 +17,25 @@
 			<thead>
 				<tr style="" class="bg-dark text-white">
 					<th class="text-center">Id</th>
-					<th class="text-center">Cliente</th>
-					<th class="text-center">CPF</th>
-					<th class="text-center">Telefone</th>
-					<th class="text-center">Locatário?</th>
-					<th class="text-center">Locador?</th>
+					<th class="text-center">Endereço</th>
+					<th class="text-center">Bairro</th>
+					<th class="text-center">Locatário</th>
+					<th class="text-center">Valor Locação</th>
+					<th class="text-center">Locador</th>
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
-			<tbody id="conteudocateg">
-				{% for cliente in clientes %}
+			<tbody id="conteudoimoveis">
+				{% for imovel in imoveis %}
 				<tr>
-					<td>{{cliente.id}}</td>
-					<td>{{cliente.nome}}</td>
-					<td>{{cliente.cpf}}</td>
-					<td>{{cliente.telefone}}</td>
-					<td>locatário</td>
-					<td>locador</td>
+					<td>{{imovel.getId()}}</td>
+					<td>{{imovel.getEndereco()}}</td>
+					<td>{{imovel.getBairro()}}</td>
+					<td>{{imovel.getLocatario().getNome()}}</td>
+					<td>{{imovel.getValorLocacao()}}</td>
+					<td>{{imovel.getLocador().getNome()}}</td>
 					<td>
-						<a href="/admin/cliente/editar/{{cliente.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
+						<a href="/admin/imovel/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs"></a>
 					</td>
 				</tr>
 				{% endfor %}
@@ -52,7 +52,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 		</div>
-		<span id ="detalhescliente" class="">{{clientes|length}} cliente(s) cadastrados.</span>
+		<span id ="detalhesimovel" class="">{{imoveis|length}} imovel(is) cadastrados.</span>
 	</div>
 
 

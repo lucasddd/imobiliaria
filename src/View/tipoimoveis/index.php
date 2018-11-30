@@ -21,7 +21,7 @@
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
-			<tbody id="conteudocateg">
+			<tbody id="conteudotipos">
 				{% for tipoimovel in tiposimoveis %}
 				<tr>
 					<td>{{tipoimovel.getId()}}</td>
