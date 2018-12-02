@@ -51,6 +51,7 @@ class ImovelModelo {
         try {
             $sql = "select i.id, i.endereco, i.bairro,
             i.tipo_imovel_id, i.foto1,i.foto2,i.foto3,i.proprietario_id, i.valor_locacao, i.valor_venda, 
+            i.area_construida, i.qt_quartos,i.qt_banheiros, i.qt_suites,i.obs,
             c.nome,c.cpf,t.descricao from imoveis as i, clientes as c, tipo_imovel as t where 
             c.id = i.proprietario_id and t.id = i.tipo_imovel_id and (c.nome like :busca or 
                 c.cpf like :busca or i.endereco like :busca or i.bairro like :busca or 
@@ -91,11 +92,13 @@ class ImovelModelo {
 
         try {
             $sql = 'insert into imoveis (endereco,bairro,tipo_imovel_id,
-                foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao) 
+                foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao,
+                qt_suites,qt_banheiros,qt_quartos,obs,area_construida) 
 values(
     upper(:endereco),:bairro,:tipo_imovel_id,:foto1,
     :foto2,:foto3,1,:proprietario_id,:valor_venda,
-    :valor_locacao
+    :valor_locacao,:qt_suites,:qt_banheiros,:qt_quartos,
+    :obs,:area_construida
     )';
 $p_sql = Conexao::getInstancia()->prepare($sql);
 $p_sql->bindValue(':endereco', $imovel->getEndereco());
@@ -107,6 +110,11 @@ $p_sql->bindValue(':foto3', $imovel->getFoto3());
 $p_sql->bindValue(':proprietario_id', $imovel->getLocatario()->getId());
 $p_sql->bindValue(':valor_venda', $imovel->getValorVenda());
 $p_sql->bindValue(':valor_locacao', $imovel->getValorLocacao());
+$p_sql->bindValue(':qt_suites', $imovel->getQtSuites());
+$p_sql->bindValue(':qt_banheiros', $imovel->getQtBanheiros());
+$p_sql->bindValue(':qt_quartos', $imovel->getQtQuartos());
+$p_sql->bindValue(':obs', $imovel->getObs());
+$p_sql->bindValue(':area_construida', $imovel->getAreaConstruida());
 if ($p_sql->execute())
     return Conexao::getInstancia()->lastInsertId();
 return null;

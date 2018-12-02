@@ -64,6 +64,30 @@
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
+						<span class="input-group-text">Qtde Quartos</span>
+					</div>
+					<input type="number" name="qtquartos" class="form-control" value="{{imovel.getQtQuartos()}}"/>
+					<div class="input-group-prepend">
+						<span class="input-group-text">Qtde Suítes</span>
+					</div>
+					<input type="number" name="qtsuites" class="form-control" value="{{imovel.getQtSuites()}}"/>
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Qtde Banheiros</span>
+					</div>
+					<input type="number" name="qtbanheiros" class="form-control" value="{{imovel.getQtBanheiros()}}"/>
+					<div class="input-group-prepend">
+						<span class="input-group-text">Area Construída(m²)</span>
+					</div>
+					<input type="number" step=".01" placeholder="0.00" name="areaconstruida" class="form-control" value="{{imovel.getAreaConstruida()}}"/>
+				</div>
+				<div class="form-group">
+					<label for="obs" class="control-label">Observações: </label>
+					<textarea class="form-control" placeholder="" name="obs" cols="50" rows="3" id="obs">{{imovel.getObs()}}</textarea>
+				</div>
+				<div class="input-group form-group">
+					<div class="input-group-prepend">
 						<span class="input-group-text">Valor Locação</span>
 					</div>
 					<input type="text" name="valorlocacao" class="form-control" value="{{imovel.getValorLocacao()}}" required/>

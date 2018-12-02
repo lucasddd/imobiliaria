@@ -21,6 +21,11 @@ class Imovel {
     private $locador;
     private $valorVenda;
     private $valorLocacao;
+    private $qtQuartos;
+    private $qtSuites;
+    private $qtBanheiros;
+    private $areaConstruida;
+    private $obs;
     
     /*
     function __construct($nome,$email,$senha,$cpf,$status,$permissao) {
@@ -110,5 +115,35 @@ class Imovel {
     }
     function getValorLocacao(){
         return $this->valorLocacao;
+    }
+    function getQtQuartos(){
+        return $this->qtQuartos;
+    }
+    function setQtQuartos($qtQuartos){
+        $this->qtQuartos = $qtQuartos;
+    }
+    function getQtSuites(){
+        return $this->qtSuites;
+    }
+    function setQtSuites($qtSuites){
+        $this->qtSuites = $qtSuites;
+    }
+    function getQtBanheiros(){
+        return $this->qtBanheiros;
+    }
+    function setQtBanheiros($qtBanheiros){
+        $this->qtBanheiros = $qtBanheiros;
+    }
+    function getAreaConstruida(){
+        return $this->areaConstruida;
+    }
+    function setAreaConstruida($areaConstruida){
+        $this->areaConstruida = $areaConstruida;
+    }
+    function getObs(){
+        return $this->obs;
+    }
+    function setObs($obs){
+        $this->obs = $obs;
     }
 }

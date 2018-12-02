@@ -154,7 +154,7 @@ public function novo() {
       return $this->response->setContent($this->twig->render('imoveis/novo.php',['locatario' => $locatario,'imovel' => $imovel,'tipos' => $tipos,'imovel' => $imovel]));        
     }else{
       $erros['clientenaoencontrado'] = 'Cliente não encontrado XD.';
-      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['locatario' => $locatario,'imovel' => $imovel,'tipos' => $tipos,'imovel' => $imovel]));        
+      return $this->response->setContent($this->twig->render('imoveis/informecpf.php',['erros' => $erros]));        
     }
   }else{
     $destino = '/';
@@ -181,31 +181,77 @@ public function salvar() {
     $bairro = trim($this->contexto->get('bairro'));
     $valorLocacao = $this->contexto->get('valorlocacao');
     $valorVenda = $this->contexto->get('valorvenda');
+    $qtQuartos = $this->contexto->get('qtquartos');
+    $qtSuites = $this->contexto->get('qtsuites');
+    $qtBanheiros = $this->contexto->get('qtbanheiros');
+    $areaConstruida = str_replace(',', '.', $this->contexto->get('areaconstruida'));
+    $obs = $this->contexto->get('obs');
     $imovel->setEndereco($endereco);
     $imovel->setBairro($bairro);
     $imovel->setValorLocacao($valorLocacao);
     $imovel->setValorVenda($valorVenda);
+    $imovel->setQtQuartos($qtQuartos);
+    $imovel->setQtBanheiros($qtBanheiros);
+    $imovel->setQtSuites($qtSuites);
+    $imovel->setAreaConstruida($areaConstruida);
+    $imovel->setObs($obs);
     $tipoModelo = new TipoImovelModelo();
     $clienteModelo = new ClienteModelo();
     $imovelModelo = new ImovelModelo();
     $locatario = new Cliente();
     $locatario = $clienteModelo->getClientePeloId($this->contexto->get('id'));
     $tipoImovel = $this->contexto->get('tipoimovel');
+    if(!empty($qtQuartos) && !is_numeric($qtQuartos)){
+      $erros['qtquartos'] = 'Campo qtde quartos deve ser um número válido';
+    }
+    if(isset($qtQuartos) && $qtQuartos < 0){
+      $erros['qtquartosnegativo'] = 'Campo qtde quartos deve ser um número positivo';
+    }
+    if(isset($qtQuartos) && is_int($qtQuartos)){
+      $erros['qtquartosfloat'] = 'Campo quarto deve ser um número inteiro';
+    }
+    if(!empty($qtSuites) && !is_numeric($qtSuites)){
+      $erros['qtsuites'] = 'Campo qtde suítes deve ser um número válido';
+    }
+    if(isset($qtSuites) && $qtSuites < 0){
+      $erros['qtsuitesnegativo'] = 'Campo qtde suítes deve ser um número positivo';
+    }
+    if(isset($qtSuites) && is_int($qtSuites)){
+      $erros['qtsuitesfloat'] = 'Campo qtde suítes deve ser um número inteiro';
+    }
+    if(!empty($qtBanheiros) && !is_numeric($qtBanheiros)){
+      $erros['qtbanheiros'] = 'Campo qtde banheiros deve ser um número válido';
+    }
+    if(isset($qtBanheiros) && $qtBanheiros < 0){
+      $erros['qtbanheirosnegativo'] = 'Campo qtde banheiros deve ser um número positivo';
+    }
+    if(isset($qtBanheiros) && is_int($qtBanheiros)){
+      $erros['qtbanheirosfloat'] = 'Campo qtde banheiros deve ser um número inteiro';
+    }
+    if(empty($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area construída é de preenchimento obrigatório';
+    }
+    if(!empty($areaConstruida) && !is_numeric($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area constrúida deve ser um número válido';
+    }
+    if(isset($areaConstruida) && $areaConstruida < 1){
+      $erros['areaconstruida'] = 'Campo area construida deve ser um número positivo maior que zero';
+    }
+    if(isset($areaConstruida) && is_int($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area construida deve ser um número inteiro';
+    }
     if(strlen($endereco) < 5 || strlen($endereco) > 255){
       $erros['len'] = 'Endereço precisa ter entre 5 e 255 caractéres.';
     }
     if(strlen($bairro) < 5 || strlen($bairro) > 90){
       $erros['len2'] = 'Bairro precisa ter entre 5 e 90 caractéres.';
     }
-    if(!is_numeric($tipoImovel)){
-      $erros['tipoimovel'] = "Tipo de imóvel inválido.";
-    }
     if($tipoImovel < 1){
       $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
     }
     $tipo = $tipoModelo->getTipoImovelPeloId($tipoImovel);
     if(!isset($tipo)){
-      $erros['tipoimovel'] = "Tipo de imóvel não cadastrado.";
+      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
     }
     
     $foto0 = $this->contexto->files->get('foto0');
@@ -265,11 +311,11 @@ public function salvar() {
     $imovel->setFoto3($foto2);
     $imovelModelo->salvar($imovel);
     if($imovelModelo){
-      $destino = '/admin/imoveis/informecpf';
+      $destino = '/admin/imoveis';
       $redirecionar = new RedirectResponse($destino);
       $redirecionar->send();
     }else{
-      $erros['ErroDB'] = "algo errada com o database...";
+      $erros['ErroDB'] = "algo errado com o database...";
       return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario,'imovel' => $imovel]));
     }
 
