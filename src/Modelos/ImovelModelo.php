@@ -132,32 +132,52 @@ return null;
     return 'deu erro na conexão:' . $ex;
 }
 }
-function atualizar(Cliente $cliente) {
+function atualizar(Imovel $imovel) {
 
     try {
-        $sql = 'update imoveis set nome = upper(:nome),cpf = :cpf,rg = :rg,
-        datanascimento = :datanascimento,endereco = upper(:endereco),
-        bairro = upper(:bairro),cidade = upper(:cidade),cep = :cep,
-        telefone = :telefone where id = :id';
+        $sql = 'update imoveis set endereco = upper(:endereco),
+        bairro = upper(:bairro),tipo_imovel_id = :tipo_imovel_id,
+        foto1 = :foto1,foto2 = :foto2, foto3 = :foto3,
+        proprietario_id = :proprietario_id, valor_venda = :valor_venda,
+        valor_locacao = :valor_locacao,qt_suites = :qt_suites,qt_banheiros = :qt_banheiros,
+        qt_quartos = :qt_quartos,obs = :obs, area_construida = :area_construida where id = :id';
         $p_sql = Conexao::getInstancia()->prepare($sql);
-        $p_sql->bindValue(':id', $cliente->getId());
-        $p_sql->bindValue(':nome', $cliente->getNome());
-        $p_sql->bindValue(':cpf', $cliente->getCpf());
-        $p_sql->bindValue(':rg', $cliente->getRg());
-        $p_sql->bindValue(':datanascimento', $cliente->getDataNascimento());
-        $p_sql->bindValue(':endereco', $cliente->getEndereco());
-        $p_sql->bindValue(':bairro', $cliente->getBairro());
-        $p_sql->bindValue(':cidade', $cliente->getCidade());
-        $p_sql->bindValue(':cep', $cliente->getCep());
-        $p_sql->bindValue(':telefone', $cliente->getTelefone());
+        $p_sql->bindValue(':id', $imovel->getId());
+        $p_sql->bindValue(':endereco', $imovel->getEndereco());
+        $p_sql->bindValue(':bairro', $imovel->getBairro());
+        $p_sql->bindValue(':tipo_imovel_id', $imovel->getTipoImovel()->getId());
+        $p_sql->bindValue(':foto1', $imovel->getFoto1());
+        $p_sql->bindValue(':foto2', $imovel->getFoto2());
+        $p_sql->bindValue(':foto3', $imovel->getFoto3());
+        $p_sql->bindValue(':proprietario_id', $imovel->getLocatario()->getId());
+        $p_sql->bindValue(':valor_venda', $imovel->getValorVenda());
+        $p_sql->bindValue(':valor_locacao', $imovel->getValorLocacao());
+        $p_sql->bindValue(':qt_suites', $imovel->getQtSuites());
+        $p_sql->bindValue(':qt_banheiros', $imovel->getQtBanheiros());
+        $p_sql->bindValue(':qt_quartos', $imovel->getQtQuartos());
+        $p_sql->bindValue(':obs', $imovel->getObs());
+        $p_sql->bindValue(':area_construida', $imovel->getAreaConstruida());
         if ($p_sql->execute())
-            return $cliente;
+            return $imovel;
         return null;
     } catch (Exception $ex) {
         return 'deu erro na conexão:' . $ex;
     }
 }
-
+function deleteImageFromImovel($id,$indice){
+    //print_r('id = '.$id.' indice = '.$indice);
+    //die();
+    try {
+        $sql = 'update imoveis set '.$indice.' = NULL where id = :id';
+        $p_sql = Conexao::getInstancia()->prepare($sql);
+        $p_sql->bindValue(':id', $id);
+        if ($p_sql->execute())
+            return true;
+        return null;
+    } catch (Exception $ex) {
+        return 'deu erro na conexão:' . $ex;
+    }
+}
 function getImovel($id) {
     try {
         $sql = 'select * from imoveis where id = :id';

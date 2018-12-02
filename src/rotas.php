@@ -108,6 +108,10 @@ $rotas->add('editImovel', new Route('/admin/imoveis/editar/{suffix}',
 $rotas->add('atualizarImovel', new Route('/admin/imoveis/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'atualizar')));
+
+$rotas->add('removeImage', new Route('/admin/imoveis/removeimage',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'removeImage')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE IMOVEIS        */
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));

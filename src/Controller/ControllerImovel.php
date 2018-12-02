@@ -27,6 +27,25 @@ class ControllerImovel {
     $this->twig = $twig;
     $this->sessao = $sessao;
   }
+  public function deleteImage($fileName){
+    if (file_exists('images/'.$fileName)){
+      unlink('images/'.$fileName);
+    }
+  }
+  public function removeImage(){
+    $imovel_id = $this->contexto->get('imovel_id');
+    $indice_foto = $this->contexto->get('indice_foto');
+    $fileName = $this->contexto->get('foto');
+    $imovelModelo = new ImovelModelo();
+    $imovelModelo->deleteImageFromImovel($imovel_id,$indice_foto);
+    if (file_exists('images/'.$fileName)){
+      unlink('images/'.$fileName);
+    }
+    $destino = '/admin/imoveis/editar/'.$imovel_id;
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+    return;
+  }
   /*FONTE https://www.geradorcpf.com/script-validar-cpf-php.htm*/
   public function validaCPF($cpf = null) {
 
@@ -112,8 +131,10 @@ public function editar($id) {
     }
     $imoveisModelo = new ImovelModelo();
     $imovel = $imoveisModelo->getImovel($id);
+    $tiposModelo = new TipoImovelModelo();
+    $tipos = $tiposModelo->listar();
     if($imovel != null){
-      return $this->response->setContent($this->twig->render('imoveis/editar.php',['imovel' => $imovel]));
+      return $this->response->setContent($this->twig->render('imoveis/editar.php',['imovel' => $imovel,'tipos' => $tipos]));
     }
     $destino = '/admin/imoveis';
     $redirecionar = new RedirectResponse($destino);
@@ -329,124 +350,163 @@ public function salvar() {
 public function atualizar() {
   if ($this->sessao->existe('usuario')){
     $erros = [];
-    $id = $this->contexto->get('id');
-    $clientesModelo = new ClienteModelo();
-    $cliente = $clientesModelo->getCliente($id);
-    if(!isset($cliente)){
-      $erros['id'] = 'Cliente não encontrado.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
-    }
-    $nome = trim($this->contexto->get('nome'));
-    $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
-    $rg = trim($this->contexto->get('rg'));
-    $telefone = preg_replace("/[^0-9]/", "", $this->contexto->get('telefone'));
-    $dataNasc = trim($this->contexto->get('datanascimento'));
-    print_r("Nasc: ".$dataNasc);
+    $imovelModelo = new ImovelModelo();
+    $imovel = $imovelModelo->getImovel($this->contexto->get('id'));
     $endereco = trim($this->contexto->get('endereco'));
     $bairro = trim($this->contexto->get('bairro'));
-    $cidade = trim($this->contexto->get('cidade'));
-    $cep = preg_replace("/[^0-9]/", "", $this->contexto->get('cep'));
-    if (!empty($dataNasc)) {
-      $data = $dataNasc;
-      $data = explode('/', $data);
-      //print_r("data aqui ".!empty($data[0]));
-      if(empty($data)){
-        $dia = $data[0];
-        $mes = $data[1];
-        $ano = $data[2];
-        $dataNasc = $ano . '-' . $mes . '-' . $dia;
-      }
-    }else{
-      $erros['nasc'] = 'Data de nascimento é de preenchimento obrigatório';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
-    }
-    //print_r("data nasc: ".$cpf);
+    $valorLocacao = $this->contexto->get('valorlocacao');
+    $valorVenda = $this->contexto->get('valorvenda');
+    $qtQuartos = $this->contexto->get('qtquartos');
+    $qtSuites = $this->contexto->get('qtsuites');
+    $qtBanheiros = $this->contexto->get('qtbanheiros');
+    $areaConstruida = str_replace(',', '.', $this->contexto->get('areaconstruida'));
+    $obs = $this->contexto->get('obs');
+    $imovel->setEndereco($endereco);
+    $imovel->setBairro($bairro);
+    $imovel->setValorLocacao($valorLocacao);
+    $imovel->setValorVenda($valorVenda);
+    $imovel->setQtQuartos($qtQuartos);
+    $imovel->setQtBanheiros($qtBanheiros);
+    $imovel->setQtSuites($qtSuites);
+    $imovel->setAreaConstruida($areaConstruida);
+    $imovel->setObs($obs);
+    //print_r($imovel);
     //die();
-    if(strlen($nome) < 10 || strlen($nome) > 255){
-      $erros['len'] = 'Nome precisa ter entre 10 e 255 caractéres.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    $tipoModelo = new TipoImovelModelo();
+    $clienteModelo = new ClienteModelo();
+    $locatario = new Cliente();
+    $locatario = $imovel->getLocatario();
+    $tipoImovel = $this->contexto->get('tipoimovel');
+    if(!empty($qtQuartos) && !is_numeric($qtQuartos)){
+      $erros['qtquartos'] = 'Campo qtde quartos deve ser um número válido';
+    }
+    if(isset($qtQuartos) && $qtQuartos < 0){
+      $erros['qtquartosnegativo'] = 'Campo qtde quartos deve ser um número positivo';
+    }
+    if(isset($qtQuartos) && is_int($qtQuartos)){
+      $erros['qtquartosfloat'] = 'Campo quarto deve ser um número inteiro';
+    }
+    if(!empty($qtSuites) && !is_numeric($qtSuites)){
+      $erros['qtsuites'] = 'Campo qtde suítes deve ser um número válido';
+    }
+    if(isset($qtSuites) && $qtSuites < 0){
+      $erros['qtsuitesnegativo'] = 'Campo qtde suítes deve ser um número positivo';
+    }
+    if(isset($qtSuites) && is_int($qtSuites)){
+      $erros['qtsuitesfloat'] = 'Campo qtde suítes deve ser um número inteiro';
+    }
+    if(!empty($qtBanheiros) && !is_numeric($qtBanheiros)){
+      $erros['qtbanheiros'] = 'Campo qtde banheiros deve ser um número válido';
+    }
+    if(isset($qtBanheiros) && $qtBanheiros < 0){
+      $erros['qtbanheirosnegativo'] = 'Campo qtde banheiros deve ser um número positivo';
+    }
+    if(isset($qtBanheiros) && is_int($qtBanheiros)){
+      $erros['qtbanheirosfloat'] = 'Campo qtde banheiros deve ser um número inteiro';
+    }
+    if(empty($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area construída é de preenchimento obrigatório';
+    }
+    if(!empty($areaConstruida) && !is_numeric($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area constrúida deve ser um número válido';
+    }
+    if(isset($areaConstruida) && $areaConstruida < 1){
+      $erros['areaconstruida'] = 'Campo area construida deve ser um número positivo maior que zero';
+    }
+    if(isset($areaConstruida) && is_int($areaConstruida)){
+      $erros['areaconstruida'] = 'Campo area construida deve ser um número inteiro';
     }
     if(strlen($endereco) < 5 || strlen($endereco) > 255){
       $erros['len'] = 'Endereço precisa ter entre 5 e 255 caractéres.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
     }
-    if(isset($cep) && strlen($cep) != 8){
-      $erros['cep'] = 'Cep inválido.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    if(strlen($bairro) < 5 || strlen($bairro) > 90){
+      $erros['len2'] = 'Bairro precisa ter entre 5 e 90 caractéres.';
     }
-    if(isset($telefone) && strlen($telefone) < 11){
-      $erros['telefone'] = 'Telefone inválido.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
+    if($tipoImovel < 1){
+      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
     }
-    if(!$this->validaCPF($cpf)){
-      $erros['cpf'] = 'Cpf inválido.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));        
+    $tipo = $tipoModelo->getTipoImovelPeloId($tipoImovel);
+    if(!isset($tipo)){
+      $erros['tipoimovel'] = "Selecione um tipo de imóvel.";
     }
-    $duplicidadeCpf = $clientesModelo->consultaCpfComExcessaoId($cpf,$id);
-    if(isset($duplicidadeCpf)){
-      $erros['duplicidade'] = 'O cpf "'.$cpf.'" já esta cadastrado.';
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['erros' => $erros,'cliente' => $cliente]));
-    }else{
-      $cliente = new Cliente();
-      $cliente->setId($id);
-      $cliente->setNome($nome);
-      $cliente->setCpf($cpf);
-      $cliente->setRg($rg);
-      $cliente->setTelefone($telefone);
-      $cliente->setDataNascimento($dataNasc);
-      $cliente->setEndereco($endereco);
-      $cliente->setBairro($bairro);
-      $cliente->setCidade($cidade);
-      $cliente->setCep($cep);
-      $clientesModelo->atualizar($cliente);
-      $destino = '/admin/clientes';
-      $redirecionar = new RedirectResponse($destino);
-      $redirecionar->send();
+    
+    $foto0 = $this->contexto->files->get('foto0');
+    if(isset($foto0)){
+      if($foto0->getSize() > 1000000){
+        $erros['foto0'] = 'Foto 1 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto0->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão1'] = 'Coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '1-'.time().'.'.$ext;
+        if($imovel->getFoto1() != null){
+          $this->deleteImage($imovel->getFoto1());
+        }
+        if(move_uploaded_file($foto0->getPathName(), 'images/'.$fileName)){
+          $imovel->setFoto1($fileName);
+        }
+      }
     }
-  }else{
-    $destino = '/';
-    $redirecionar = new RedirectResponse($destino);
-    $redirecionar->send();
-  }
-  return;
-  /*
-  if ($this->sessao->existe('usuario')){
-    $clientesModelo = new TipoClienteModelo();
-    $erros = [];
-    $id = $this->contexto->get('id');
-    $tipoCliente = $clientesModelo->getTipoCliente($id);
-    $desc = trim($this->contexto->get('descricao'));
-    if(!is_numeric($id)){
-      $erros['id'] = 'Id inválido';
+    $foto1 = $this->contexto->files->get('foto1');
+    if(isset($foto1)){
+      if($foto1->getSize() > 1000000){
+        $erros['foto1'] = 'Foto 2 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto1->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão2'] = 'Foto 2, coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '2-'.time().'.'.$ext;
+        if($imovel->getFoto2() != null){
+          $this->deleteImage($imovel->getFoto2());
+        }
+        if(move_uploaded_file($foto1->getPathName(), 'images/'.$fileName)){
+          $imovel->setFoto2($fileName);
+        }
+      }
     }
-    if(strlen($desc) < 5 || strlen($desc) > 255){
-      $erros['len'] = 'Tamanho do texto na descrição inválido.';
-      $erros['len2'] = 'A palavra precisa ter entre 5 e 255 caractéres.';
+    $foto2 = $this->contexto->files->get('foto2');
+    if(isset($foto2)){
+      if($foto2->getSize() > 1000000){
+        $erros['foto2'] = 'Foto 3 não pode ser maior que 1Mb';
+      }
+      $ext = strtolower(explode('/',$foto2->getClientMimeType())[1]);
+      if($ext != 'png' && $ext != 'jpg' && $ext != 'jpeg'){
+        $erros['extensão3'] = 'Foto 3, coloque somente fotos com a extensão jpg, jpeg ou png';
+      }else{
+        $fileName = '3-'.time().'.'.$ext;
+        if($imovel->getFoto3() != null){
+          $this->deleteImage($imovel->getFoto3());
+        }
+        if(move_uploaded_file($foto2->getPathName(), 'images/'.$fileName)){
+          $imovel->setFoto3($fileName);
+        }
+      }
     }
     if(!empty($erros)){
-      $erros['chu'] = 'não sei';
-      return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['erros' => $erros,'tipocliente' => $tipoCliente]));
+      return $this->response->setContent($this->twig->render('imoveis/editar.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario,'imovel' => $imovel]));
     }
-    $duplicidadeDescricao = $clientesModelo->consultaDescricaoComExcessaoId($desc,$id);
-    if(isset($duplicidadeDescricao)){
-      $erros['duplicidade'] = 'A descricao "'.$desc.'" já esta cadastrada.';
-      return $this->response->setContent($this->twig->render('tiposcliente/editar.php',['erros' => $erros,'tipocliente' => $tipoCliente]));
-    }else{
-      $tipoCliente = new TipoCliente();
-      $tipoCliente->setDescricao($desc);
-      $tipoCliente->setId($id);
-      $clientesModelo->atualizar($tipoCliente);
-      $destino = '/admin/tiposcliente';
+    //print_r($this->contexto);
+    //die();
+    $imovel->setLocatario($locatario);
+    $imovel->setTipoImovel($tipo);
+    $imovelModelo->atualizar($imovel);
+    if($imovelModelo){
+      $destino = '/admin/imoveis';
       $redirecionar = new RedirectResponse($destino);
       $redirecionar->send();
+    }else{
+      $erros['ErroDB'] = "algo errado com o database...";
+      return $this->response->setContent($this->twig->render('imoveis/novo.php',['erros' => $erros,'tipos' => $tipoModelo->listar(),'locatario' => $locatario,'imovel' => $imovel]));
     }
+
   }else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);
     $redirecionar->send();
   }
-  return;
-  */
+  return; 
 }
 public function cadastro() {
         // validação
