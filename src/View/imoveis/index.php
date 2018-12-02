@@ -8,7 +8,7 @@
 		</div>
 		<div class="col-md-6">
 			<form action="/admin/imoveis" method="GET">
-			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
+				<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
 			</form>
 		</div>
 	</div>
@@ -37,6 +37,11 @@
 					<td>
 						<a href="/admin/imoveis/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs" data-toggle="tooltip" data-placement="top" title="Editar"></a>
 						<a href="/admin/imoveis/show/{{imovel.id}}" class="btn btn-xs btn-info fa fa-eye btn-xs" data-toggle="tooltip" data-placement="top" title="Visualizar"></a>
+						<form action="/admin/imoveis/transferir_informecpf" method="POST">
+							<input type="hidden" value="{{imovel.getId()}}" name="id_imovel">
+							<button type="submit" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Transferir"><i class="fa fa-exchange" ></i></button>
+						</form>
+						
 					</td>
 				</tr>
 				{% endfor %}

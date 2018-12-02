@@ -178,6 +178,21 @@ function deleteImageFromImovel($id,$indice){
         return 'deu erro na conexão:' . $ex;
     }
 }
+function transferirImovel($idImovel,$newLocatario){
+    //print_r('id = '.$id.' indice = '.$indice);
+    //die();
+    try {
+        $sql = 'update imoveis set proprietario_id = :new_proprietario where id = :id';
+        $p_sql = Conexao::getInstancia()->prepare($sql);
+        $p_sql->bindValue(':id', $idImovel);
+        $p_sql->bindValue(':new_proprietario', $newLocatario);
+        if ($p_sql->execute())
+            return true;
+        return null;
+    } catch (Exception $ex) {
+        return 'deu erro na conexão:' . $ex;
+    }
+}
 function getImovel($id) {
     try {
         $sql = 'select * from imoveis where id = :id';

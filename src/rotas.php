@@ -97,9 +97,21 @@ $rotas->add('informecpf', new Route('/admin/imoveis/informecpf',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'informecpf', 'suffix' => '')));
 
+$rotas->add('transferir_informecpf', new Route('/admin/imoveis/transferir_informecpf',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'transferir_informecpf', 'suffix' => '')));
+
+$rotas->add('transferirImovel', new Route('/admin/imoveis/transferir',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'transferirImovel', 'suffix' => '')));
+
 $rotas->add('salvarImovel', new Route('/admin/imoveis/salvar',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'salvar')));
+
+$rotas->add('efetuarTransferencia', new Route('/admin/imoveis/efetuartransferencia',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'transferirProprietario')));
 
 $rotas->add('editImovel', new Route('/admin/imoveis/editar/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
