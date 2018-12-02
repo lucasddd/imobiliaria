@@ -36,6 +36,7 @@
 					<td>{{imovel.getLocador().getNome()}}</td>
 					<td>
 						<a href="/admin/imoveis/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs" data-toggle="tooltip" data-placement="top" title="Editar"></a>
+						<a href="/admin/imoveis/show/{{imovel.id}}" class="btn btn-xs btn-info fa fa-eye btn-xs" data-toggle="tooltip" data-placement="top" title="Visualizar"></a>
 					</td>
 				</tr>
 				{% endfor %}

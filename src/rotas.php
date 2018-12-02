@@ -105,6 +105,10 @@ $rotas->add('editImovel', new Route('/admin/imoveis/editar/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'editar','suffix' => '')));
 
+$rotas->add('editImovel', new Route('/admin/imoveis/show/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'show','suffix' => '')));
+
 $rotas->add('atualizarImovel', new Route('/admin/imoveis/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'atualizar')));

@@ -111,15 +111,29 @@ public function index() {
   return;
 }
 
-public function show() {
-  if ($this->sessao->existe('usuario'))
-    return $this->response->setContent($this->twig->render('cadastro.twig'));
-  else{
+public function show($id) {
+  if ($this->sessao->existe('usuario')){
+    if(!is_numeric($id) || $id < 1){
+      $destino = '/admin/imoveis';
+      $redirecionar = new RedirectResponse($destino);
+      $redirecionar->send();
+      return;   
+    }
+    $imoveisModelo = new ImovelModelo();
+    $imovel = $imoveisModelo->getImovel($id);
+    if($imovel != null){
+      return $this->response->setContent($this->twig->render('imoveis/show.php',['imovel' => $imovel]));
+    }
+    $destino = '/admin/imoveis';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+    return;
+  }else{
     $destino = '/';
     $redirecionar = new RedirectResponse($destino);
     $redirecionar->send();
 
-  } 
+  }
 }
 public function editar($id) {
   if ($this->sessao->existe('usuario')){
@@ -140,6 +154,11 @@ public function editar($id) {
     $redirecionar = new RedirectResponse($destino);
     $redirecionar->send();
     return;
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+
   } 
 }
 public function novo() {
