@@ -35,7 +35,7 @@
 					<td>{{imovel.getValorLocacao()}}</td>
 					<td>{{imovel.getLocador().getNome()}}</td>
 					<td>
-						<a href="/admin/imovel/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs"></a>
+						<a href="/admin/imoveis/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs" data-toggle="tooltip" data-placement="top" title="Editar"></a>
 					</td>
 				</tr>
 				{% endfor %}

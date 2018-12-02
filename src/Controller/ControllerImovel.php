@@ -105,17 +105,17 @@ public function show() {
 public function editar($id) {
   if ($this->sessao->existe('usuario')){
     if(!is_numeric($id) || $id < 1){
-      $destino = '/admin/clientes';
+      $destino = '/admin/imoveis';
       $redirecionar = new RedirectResponse($destino);
       $redirecionar->send();
       return;   
     }
-    $clientesModelo = new ClienteModelo();
-    $cliente = $clientesModelo->getCliente($id);
-    if($cliente != null){
-      return $this->response->setContent($this->twig->render('clientes/editar.php',['cliente' => $cliente]));
+    $imoveisModelo = new ImovelModelo();
+    $imovel = $imoveisModelo->getImovel($id);
+    if($imovel != null){
+      return $this->response->setContent($this->twig->render('imoveis/editar.php',['imovel' => $imovel]));
     }
-    $destino = '/admin/clientes';
+    $destino = '/admin/imoveis';
     $redirecionar = new RedirectResponse($destino);
     $redirecionar->send();
     return;

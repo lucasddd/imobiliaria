@@ -3,27 +3,27 @@
 {% block conteudo %}
 
 <div class="col-md-12">
-	<h1 class="text-center text-success">Novo imóvel</h1>
+	<h1 class="text-center text-success">Editar imóvel</h1>
 	<div class="col-md-8 offset-md-2 form-horizontal">
-		<form method="POST" action="/admin/imoveis/salvar" accept-charset="UTF-8" enctype="multipart/form-data">
+		<form method="POST" action="/admin/imoveis/atualizar" accept-charset="UTF-8" enctype="multipart/form-data">
 			<div class="form-group">
 				<h4 class="text-center text-success">Informações do proprietário (locatário)</h4>
-				<input type="hidden" class="form-control" id="id" name="id" value="{{locatario.getId()}}">
+				<input type="hidden" class="form-control" id="id" name="id" value="{{imovel.getLocatario().getId()}}">
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Nome</span>
 					</div>
-					<input type="text" name="nome" class="form-control" readonly="true" value="{{locatario.getNome()}}" required/>
+					<input type="text" name="nome" class="form-control" readonly="true" value="{{imovel.getLocatario().getNome()}}" required/>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">CPF</span>
 					</div>
-					<input type="text" name="cpf" class="form-control" readonly="" value="{{locatario.getCpf()}}" required/>
+					<input type="text" name="cpf" class="form-control" readonly="" value="{{imovel.getLocatario().getCpf()}}" required/>
 					<div class="input-group-prepend">
 						<span class="input-group-text">Tel.</span>
 					</div>
-					<input type="text" name="telefone" readonly="" class="form-control" value="{{locatario.getTelefone()}}" />
+					<input type="text" name="telefone" readonly="" class="form-control" value="{{imovel.getLocatario().getTelefone()}}" />
 				</div>
 				<hr style="color: black">
 				<h4 class="text-center text-success">Informações do imóvel</h4>

@@ -28,6 +28,11 @@ class ImovelModelo {
                 $imovel->setId($imovel_->id);
                 $imovel->setEndereco($imovel_->endereco);
                 $imovel->setBairro($imovel_->bairro);
+                $imovel->setQtBanheiros($imovel_->qt_banheiros);
+                $imovel->setQtQuartos($imovel_->qt_quartos);
+                $imovel->setQtSuites($imovel_->qt_suites);
+                $imovel->setObs($imovel_->obs);
+                $imovel->setAreaConstruida($imovel_->area_construida);
                 $imovel->setValorLocacao($imovel_->valor_locacao);
                 $imovel->setValorVenda($imovel_->valor_venda);
                 $imovel->setFoto1($imovel_->foto1);
@@ -56,44 +61,49 @@ class ImovelModelo {
             c.id = i.proprietario_id and t.id = i.tipo_imovel_id and (c.nome like :busca or 
                 c.cpf like :busca or i.endereco like :busca or i.bairro like :busca or 
                 i.valor_locacao like :busca or t.descricao like :busca) ORDER BY id desc";
-            
-            $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':busca', "%".$palavra."%");
-            $p_sql->execute();
-            $imoveis = $p_sql->fetchAll(PDO::FETCH_OBJ);
-            $listImoveis = array();
-            $clienteModelo = new ClienteModelo();
-            $tipoModelo = new TipoImovelModelo();
-            foreach ($imoveis as $key => $imovel_) {
-                $imovel = new Imovel();
-                $imovel->setId($imovel_->id);
-                $imovel->setEndereco($imovel_->endereco);
-                $imovel->setBairro($imovel_->bairro);
-                $imovel->setValorLocacao($imovel_->valor_locacao);
-                $imovel->setValorVenda($imovel_->valor_venda);
-                $imovel->setFoto1($imovel_->foto1);
-                $imovel->setFoto2($imovel_->foto2);
-                $imovel->setFoto3($imovel_->foto3);
-                $locatario = new Cliente();
-                $locatario = $clienteModelo->getClientePeloId($imovel_->proprietario_id);
-                $imovel->setLocatario($locatario);
-                $tipo = new TipoImovel();
-                $tipo = $tipoModelo->getTipoImovelPeloId($imovel_->tipo_imovel_id);
-                $imovel->setTipoImovel($tipo);
-                $listImoveis[$key] = $imovel;
-            }
-            return $listImoveis;
-        } catch (Exception $ex) {
-            return 'deu erro na conexão:' . $ex;
-        }
-    }
 
-    function salvar(Imovel $imovel) {
+$p_sql = Conexao::getInstancia()->prepare($sql);
+$p_sql->bindValue(':busca', "%".$palavra."%");
+$p_sql->execute();
+$imoveis = $p_sql->fetchAll(PDO::FETCH_OBJ);
+$listImoveis = array();
+$clienteModelo = new ClienteModelo();
+$tipoModelo = new TipoImovelModelo();
+foreach ($imoveis as $key => $imovel_) {
+    $imovel = new Imovel();
+    $imovel->setId($imovel_->id);
+    $imovel->setEndereco($imovel_->endereco);
+    $imovel->setBairro($imovel_->bairro);
+    $imovel->setQtBanheiros($imovel_->qt_banheiros);
+    $imovel->setQtQuartos($imovel_->qt_quartos);
+    $imovel->setQtSuites($imovel_->qt_suites);
+    $imovel->setObs($imovel_->obs);
+    $imovel->setAreaConstruida($imovel_->area_construida);
+    $imovel->setValorLocacao($imovel_->valor_locacao);
+    $imovel->setValorVenda($imovel_->valor_venda);
+    $imovel->setFoto1($imovel_->foto1);
+    $imovel->setFoto2($imovel_->foto2);
+    $imovel->setFoto3($imovel_->foto3);
+    $locatario = new Cliente();
+    $locatario = $clienteModelo->getClientePeloId($imovel_->proprietario_id);
+    $imovel->setLocatario($locatario);
+    $tipo = new TipoImovel();
+    $tipo = $tipoModelo->getTipoImovelPeloId($imovel_->tipo_imovel_id);
+    $imovel->setTipoImovel($tipo);
+    $listImoveis[$key] = $imovel;
+}
+return $listImoveis;
+} catch (Exception $ex) {
+    return 'deu erro na conexão:' . $ex;
+}
+}
 
-        try {
-            $sql = 'insert into imoveis (endereco,bairro,tipo_imovel_id,
-                foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao,
-                qt_suites,qt_banheiros,qt_quartos,obs,area_construida) 
+function salvar(Imovel $imovel) {
+
+    try {
+        $sql = 'insert into imoveis (endereco,bairro,tipo_imovel_id,
+            foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao,
+            qt_suites,qt_banheiros,qt_quartos,obs,area_construida) 
 values(
     upper(:endereco),:bairro,:tipo_imovel_id,:foto1,
     :foto2,:foto3,1,:proprietario_id,:valor_venda,
@@ -154,8 +164,31 @@ function getImovel($id) {
         $p_sql = Conexao::getInstancia()->prepare($sql);
         $p_sql->bindValue(':id',$id);
         $p_sql->execute();
+        $clienteModelo = new ClienteModelo();
+        $tipoModelo = new TipoImovelModelo();
         if ($p_sql->rowCount() > 0) {
-            return $p_sql->fetch(PDO::FETCH_ASSOC);
+            $imovel_ = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
+            $imovel = new Imovel();
+            $imovel->setId($imovel_->id);
+            $imovel->setEndereco($imovel_->endereco);
+            $imovel->setBairro($imovel_->bairro);
+            $imovel->setQtBanheiros($imovel_->qt_banheiros);
+            $imovel->setQtQuartos($imovel_->qt_quartos);
+            $imovel->setQtSuites($imovel_->qt_suites);
+            $imovel->setObs($imovel_->obs);
+            $imovel->setAreaConstruida($imovel_->area_construida);
+            $imovel->setValorLocacao($imovel_->valor_locacao);
+            $imovel->setValorVenda($imovel_->valor_venda);
+            $imovel->setFoto1($imovel_->foto1);
+            $imovel->setFoto2($imovel_->foto2);
+            $imovel->setFoto3($imovel_->foto3);
+            $locatario = new Cliente();
+            $locatario = $clienteModelo->getClientePeloId($imovel_->proprietario_id);
+            $imovel->setLocatario($locatario);
+            $tipo = new TipoImovel();
+            $tipo = $tipoModelo->getTipoImovelPeloId($imovel_->tipo_imovel_id);
+            $imovel->setTipoImovel($tipo);
+            return $imovel;
         }
         return null;
     } catch (Exception $ex) {
