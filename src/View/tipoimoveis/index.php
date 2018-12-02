@@ -28,7 +28,10 @@
 					<td>{{tipoimovel.getDescricao()}}</td>
 					<td>
 						<a href="/admin/tiposimoveis/editar/{{tipoimovel.id}}" class="btn btn-warning fa fa-pencil btn-xs"></a>
-						{{tipoimovel.getImoveis() ? 'sim' : 'não'}}
+						{% if(tipoimovel.getImoveis()) %}
+						{% else %}
+						<a href="/admin/tiposimoveis/delete/{{tipoimovel.id}}" class="btn btn-danger fa fa-trash btn-xs"></a>
+						{% endif %}
 					</td>
 				</tr>
 				{% endfor %}

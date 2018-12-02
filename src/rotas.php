@@ -80,6 +80,10 @@ $rotas->add('editTipoImovel', new Route('/admin/tiposimoveis/editar/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
             "method" => 'editar','suffix' => '')));
 
+$rotas->add('deleteTipoImovel', new Route('/admin/tiposimoveis/delete/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
+            "method" => 'delete','suffix' => '')));
+
 $rotas->add('atualizarTipoImovel', new Route('/admin/tiposimoveis/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerTipoImovel',
             "method" => 'atualizar')));

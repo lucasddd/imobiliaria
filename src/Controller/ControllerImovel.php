@@ -244,6 +244,10 @@ public function transferirImovel() {
     $imovel = $imovelModelo->getImovel($idImovel);
     $newLocatario = new Cliente();
     $cliente_ = $clienteModelo->consultaCpf($cpf);
+    if($cliente_['id'] == $imovel->getLocatario()->getId()){
+      $erros['duplicidade'] = 'Novo proprietário não pode ser o mesmo do atual.';
+      return $this->response->setContent($this->twig->render('imoveis/transferir_informecpf.php',['erros' => $erros,'id_imovel' => $idImovel]));        
+    }
     if(isset($cliente_)){
       $newLocatario->setId($cliente_['id']);
       $newLocatario->setNome($cliente_['nome']);
@@ -311,43 +315,32 @@ public function salvar() {
     $locatario = new Cliente();
     $locatario = $clienteModelo->getClientePeloId($this->contexto->get('id'));
     $tipoImovel = $this->contexto->get('tipoimovel');
-    if(!empty($qtQuartos) && !is_int($qtQuartos)){
-      $erros['qtquartos'] = 'Campo qtde quartos deve ser um número válido';
-    }
+    
     if(isset($qtQuartos) && $qtQuartos < 0){
       $erros['qtquartosnegativo'] = 'Campo qtde quartos deve ser um número positivo';
     }
-    if(isset($qtQuartos) && !is_int($qtQuartos)){
+    if(isset($qtQuartos) && !is_numeric($qtQuartos)){
       $erros['qtquartosfloat'] = 'Campo quarto deve ser um número inteiro';
-    }
-    if(!empty($qtSuites) && !is_int($qtSuites)){
-      $erros['qtsuites'] = 'Campo qtde suítes deve ser um número válido';
     }
     if(isset($qtSuites) && $qtSuites < 0){
       $erros['qtsuitesnegativo'] = 'Campo qtde suítes deve ser um número positivo';
     }
-    if(isset($qtSuites) && !is_int($qtSuites)){
+    if(isset($qtSuites) && !is_numeric($qtSuites)){
       $erros['qtsuitesfloat'] = 'Campo qtde suítes deve ser um número inteiro';
-    }
-    if(!empty($qtBanheiros) && !is_int($qtBanheiros)){
-      $erros['qtbanheiros'] = 'Campo qtde banheiros deve ser um número válido';
     }
     if(isset($qtBanheiros) && $qtBanheiros < 0){
       $erros['qtbanheirosnegativo'] = 'Campo qtde banheiros deve ser um número positivo';
     }
-    if(isset($qtBanheiros) && !is_int($qtBanheiros)){
+    if(isset($qtBanheiros) && !is_numeric($qtBanheiros)){
       $erros['qtbanheirosfloat'] = 'Campo qtde banheiros deve ser um número inteiro';
     }
     if(empty($areaConstruida)){
       $erros['areaconstruida'] = 'Campo area construída é de preenchimento obrigatório';
     }
-    if(!empty($areaConstruida) && !is_numeric($areaConstruida)){
-      $erros['areaconstruida'] = 'Campo area constrúida deve ser um número válido';
-    }
     if(isset($areaConstruida) && $areaConstruida < 1){
       $erros['areaconstruida'] = 'Campo area construida deve ser um número positivo maior que zero';
     }
-    if(isset($areaConstruida) && is_int($areaConstruida)){
+    if(isset($areaConstruida) && !is_numeric($areaConstruida)){
       $erros['areaconstruida'] = 'Campo area construida deve ser um número inteiro';
     }
     if(strlen($endereco) < 5 || strlen($endereco) > 255){
@@ -472,43 +465,32 @@ public function atualizar() {
     $locatario = new Cliente();
     $locatario = $imovel->getLocatario();
     $tipoImovel = $this->contexto->get('tipoimovel');
-    if(!empty($qtQuartos) && !is_numeric($qtQuartos)){
-      $erros['qtquartos'] = 'Campo qtde quartos deve ser um número válido';
-    }
+    
     if(isset($qtQuartos) && $qtQuartos < 0){
       $erros['qtquartosnegativo'] = 'Campo qtde quartos deve ser um número positivo';
     }
-    if(isset($qtQuartos) && !is_int($qtQuartos)){
+    if(isset($qtQuartos) && !is_numeric($qtQuartos)){
       $erros['qtquartosfloat'] = 'Campo quarto deve ser um número inteiro';
-    }
-    if(!empty($qtSuites) && !is_int($qtSuites)){
-      $erros['qtsuites'] = 'Campo qtde suítes deve ser um número válido';
     }
     if(isset($qtSuites) && $qtSuites < 0){
       $erros['qtsuitesnegativo'] = 'Campo qtde suítes deve ser um número positivo';
     }
-    if(isset($qtSuites) && !is_int($qtSuites)){
+    if(isset($qtSuites) && !is_numeric($qtSuites)){
       $erros['qtsuitesfloat'] = 'Campo qtde suítes deve ser um número inteiro';
-    }
-    if(!empty($qtBanheiros) && !is_int($qtBanheiros)){
-      $erros['qtbanheiros'] = 'Campo qtde banheiros deve ser um número válido';
     }
     if(isset($qtBanheiros) && $qtBanheiros < 0){
       $erros['qtbanheirosnegativo'] = 'Campo qtde banheiros deve ser um número positivo';
     }
-    if(isset($qtBanheiros) && !is_int($qtBanheiros)){
+    if(isset($qtBanheiros) && !is_numeric($qtBanheiros)){
       $erros['qtbanheirosfloat'] = 'Campo qtde banheiros deve ser um número inteiro';
     }
     if(empty($areaConstruida)){
       $erros['areaconstruida'] = 'Campo area construída é de preenchimento obrigatório';
     }
-    if(!empty($areaConstruida) && !is_numeric($areaConstruida)){
-      $erros['areaconstruida'] = 'Campo area constrúida deve ser um número válido';
-    }
     if(isset($areaConstruida) && $areaConstruida < 1){
       $erros['areaconstruida'] = 'Campo area construida deve ser um número positivo maior que zero';
     }
-    if(isset($areaConstruida) && is_int($areaConstruida)){
+    if(isset($areaConstruida) && !is_numeric($areaConstruida)){
       $erros['areaconstruida'] = 'Campo area construida deve ser um número inteiro';
     }
     if(strlen($endereco) < 5 || strlen($endereco) > 255){

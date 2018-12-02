@@ -146,6 +146,25 @@ class ControllerTipoImovel {
     }
     return;
   }
+  public function delete($id) {
+    if ($this->sessao->existe('usuario')){
+      if(!is_numeric($id) || $id < 1){
+        $destino = '/admin/tiposimoveis';
+        $redirecionar = new RedirectResponse($destino);
+        $redirecionar->send();
+        return;   
+      }
+      $tipos = new TipoImovelModelo();
+      $tipoImovel = $tipos->getTipoImovelPeloId($id);
+      if($tipoImovel != null){
+        $tipos->deleteTipoImovel($id);
+      }
+      $destino = '/admin/tiposimoveis';
+      $redirecionar = new RedirectResponse($destino);
+      $redirecionar->send();
+      return;
+    } 
+  }
   public function cadastro() {
         // validação
     $imagem = $this->contexto->files->get('imagem');

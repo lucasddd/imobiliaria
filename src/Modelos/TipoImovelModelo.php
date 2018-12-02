@@ -139,5 +139,16 @@ class TipoImovelModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    function deleteTipoImovel($id) {
+        try {
+            $sql = 'delete from tipo_imovel where id = :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            return;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
 
 }

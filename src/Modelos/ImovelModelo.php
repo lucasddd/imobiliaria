@@ -232,7 +232,7 @@ function getImovel($id) {
 }
 function getImoveisPeloTipo($id) {
     try {
-        $sql = 'select * from imoveis where proprietario_id = :id';
+        $sql = 'select * from imoveis where tipo_imovel_id = :id';
         $p_sql = Conexao::getInstancia()->prepare($sql);
         $p_sql->bindValue(':id',$id);
         $p_sql->execute();
