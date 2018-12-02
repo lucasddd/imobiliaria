@@ -83,7 +83,7 @@
 				</div>
 				<div class="form-group">
 					<label for="obs" class="control-label">Observações: </label>
-					<textarea class="form-control" placeholder="" name="obs" cols="50" rows="3" id="obs">{{imovel.getObs()}}</textarea>
+					<textarea class="form-control" placeholder="Com laje, com forro, imovel novo, próximo ao forum..." name="obs" cols="50" rows="3" id="obs">{{imovel.getObs()}}</textarea>
 				</div>
 				<div class="input-group form-group">
 					<div class="input-group-prepend">
