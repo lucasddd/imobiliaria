@@ -94,7 +94,7 @@ DROP TABLE IF EXISTS `locacoes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locacoes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `locatario_id` int(11) DEFAULT NULL,
+  `locador_id` int(11) DEFAULT NULL,
   `data_locacao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `valor_mensal` float(10,2) NOT NULL DEFAULT '0.00',
   `valor_venda` float(10,2) DEFAULT NULL,
@@ -105,9 +105,9 @@ CREATE TABLE `locacoes` (
   `dia_vencimento` int(11) NOT NULL DEFAULT '1',
   `dia_repasse` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `locatario_id` (`locatario_id`),
+  KEY `locador_id` (`locador_id`),
   KEY `imovel_id` (`imovel_id`),
-  CONSTRAINT `locacoes_ibfk_1` FOREIGN KEY (`locatario_id`) REFERENCES `clientes` (`id`),
+  CONSTRAINT `locacoes_ibfk_1` FOREIGN KEY (`locador_id`) REFERENCES `clientes` (`id`),
   CONSTRAINT `locacoes_ibfk_2` FOREIGN KEY (`imovel_id`) REFERENCES `imoveis` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
