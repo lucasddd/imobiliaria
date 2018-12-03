@@ -33,15 +33,24 @@
 					<td>{{imovel.getBairro()}}</td>
 					<td>{{imovel.getLocatario().getNome()}}</td>
 					<td>{{imovel.getValorLocacao()}}</td>
-					<td>{{imovel.getLocador().getNome()}}</td>
 					<td>
+					{% if(imovel.getLocador()) %}
+
+					{{imovel.getLocador().getNome()}}
+					{% else %}
+					<form class="" action="/admin/imoveis/alugar_informecpf" method="POST">
+						<input type="hidden" value="{{imovel.getId()}}" name="id_imovel">
+						<button type="submit" class="btn btn-dark btn-md" data-toggle="tooltip" data-placement="top" title="Alugar"><i class="fa fa-plus" ></i></button>
+					</form>
+					{% endif %}
+					</td>
+					<td class="">
 						<a href="/admin/imoveis/editar/{{imovel.id}}" class="btn btn-xs btn-warning fa fa-pencil btn-xs" data-toggle="tooltip" data-placement="top" title="Editar"></a>
 						<a href="/admin/imoveis/show/{{imovel.id}}" class="btn btn-xs btn-info fa fa-eye btn-xs" data-toggle="tooltip" data-placement="top" title="Visualizar"></a>
-						<form action="/admin/imoveis/transferir_informecpf" method="POST">
+						<form class="" action="/admin/imoveis/transferir_informecpf" method="POST">
 							<input type="hidden" value="{{imovel.getId()}}" name="id_imovel">
-							<button type="submit" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Transferir"><i class="fa fa-exchange" ></i></button>
+							<button type="submit" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" title="Transferir"><i class="fa fa-exchange" ></i></button>
 						</form>
-						
 					</td>
 				</tr>
 				{% endfor %}

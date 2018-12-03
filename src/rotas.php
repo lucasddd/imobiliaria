@@ -109,6 +109,14 @@ $rotas->add('transferirImovel', new Route('/admin/imoveis/transferir',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'transferirImovel', 'suffix' => '')));
 
+$rotas->add('alugar_informecpf', new Route('/admin/imoveis/alugar_informecpf',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'alugar_informecpf', 'suffix' => '')));
+
+$rotas->add('alugarImovel', new Route('/admin/imoveis/alugarimovel',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'alugarImovel', 'suffix' => '')));
+
 $rotas->add('salvarImovel', new Route('/admin/imoveis/salvar',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'salvar')));

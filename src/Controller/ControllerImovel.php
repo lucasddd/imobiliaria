@@ -271,6 +271,64 @@ public function transferirImovel() {
 
   } 
 }
+public function alugar_informecpf() {
+  if ($this->sessao->existe('usuario')){
+    $idImovel = $this->contexto->get('id_imovel');
+    return $this->response->setContent($this->twig->render('imoveis/alugar_informecpf.php',['erros' => '','id_imovel' => $idImovel]));
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+
+  } 
+}
+public function alugarImovel() {
+  if ($this->sessao->existe('usuario')){
+    $erros = [];
+    $idImovel = $this->contexto->get('id_imovel');
+    $imovel = new Imovel();
+    $cpf = trim(preg_replace("/[^0-9]/", "", $this->contexto->get('cpf')));
+    //print_r($cpf);
+    //die();
+    if(!$this->validaCPF($cpf)){
+      $erros['cpf'] = 'Cpf '.$this->contexto->get('cpf').' inválido.';
+      //$destino = '/admin/imoveis/informecpf';
+      //$redirecionar = new RedirectResponse($destino);
+      //$redirecionar->send();
+      return $this->response->setContent($this->twig->render('imoveis/alugar_informecpf.php',['erros' => $erros,'id_imovel' => $idImovel]));        
+    }
+    $clienteModelo = new ClienteModelo();
+    $imovelModelo = new ImovelModelo();
+    $imovel = $imovelModelo->getImovel($idImovel);
+    $locador = new Cliente();
+    $cliente_ = $clienteModelo->consultaCpf($cpf);
+    if($cliente_['id'] == $imovel->getLocatario()->getId()){
+      $erros['duplicidade'] = 'Locador não pode ser o locatário.';
+      return $this->response->setContent($this->twig->render('imoveis/alugar_informecpf.php',['erros' => $erros,'id_imovel' => $idImovel]));        
+    }
+    if(isset($cliente_)){
+      $locador->setId($cliente_['id']);
+      $locador->setNome($cliente_['nome']);
+      $locador->setCpf($cliente_['cpf']);
+      $locador->setRg($cliente_['rg']);
+      $locador->setTelefone($cliente_['telefone']);
+      $locador->setDataNascimento($cliente_['datanascimento']);
+      $locador->setEndereco($cliente_['endereco']);
+      $locador->setBairro($cliente_['bairro']);
+      $locador->setCidade($cliente_['cidade']);
+      $locador->setCep($cliente_['cep']);
+      return $this->response->setContent($this->twig->render('imoveis/alugarimovel.php',['locador' => $locador,'imovel' => $imovel]));        
+    }else{
+      $erros['clientenaoencontrado'] = 'Cliente não encontrado XD.';
+      return $this->response->setContent($this->twig->render('imoveis/alugar_informecpf.php',['erros' => $erros,'id_imovel' => $idImovel]));        
+    }
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+
+  } 
+}
 public function transferirProprietario(){
   $idNewLocatario = $this->contexto->get('id_newLocatario');
   $idImovel = $this->contexto->get('id_imovel');
