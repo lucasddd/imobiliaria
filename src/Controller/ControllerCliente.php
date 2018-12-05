@@ -168,7 +168,7 @@ public function salvar() {
       $erros['cep'] = 'Cep inválido.';
       return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
     }
-    if(isset($telefone) && strlen($telefone) < 11){
+    if(isset($telefone) && strlen($telefone) < 8){
       $erros['telefone'] = 'Telefone inválido.';
       return $this->response->setContent($this->twig->render('clientes/novo.php',['erros' => $erros]));
     }

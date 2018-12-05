@@ -25,10 +25,10 @@ $rotas->add('logout', new Route('/logout',
 $rotas->add('tiposCliente', new Route('/admin/tiposcliente',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
             "method" => 'index')));
-
+/* deixar só tabela */
 $rotas->add('novoTipoCliente', new Route('/admin/tiposcliente/novo',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
-            "method" => 'novo', 'suffix' => '')));
+            "method" => 'novo')));
 
 $rotas->add('salvarTipoCliente', new Route('/admin/tiposcliente/salvar',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
