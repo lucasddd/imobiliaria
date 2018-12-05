@@ -586,6 +586,23 @@ public function atualizar() {
   }
   return; 
 }
+public function delete() {
+  if ($this->sessao->existe('usuario')){
+    $idImovel = $this->contexto->get('id_imovel');
+    $imovelModelo = new ImovelModelo();
+    $imovel = $imovelModelo->getImovel($idImovel);
+    if(isset($imovel) && !$imovel->imovelPossuiLocacoes())
+      $imovelModelo->deleteImovel($imovel);
+    $destino = '/admin/imoveis';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+  }else{
+    $destino = '/';
+    $redirecionar = new RedirectResponse($destino);
+    $redirecionar->send();
+
+  } 
+}
 public function cadastro() {
         // validação
   $imagem = $this->contexto->files->get('imagem');

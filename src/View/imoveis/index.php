@@ -51,6 +51,13 @@
 							<input type="hidden" value="{{imovel.getId()}}" name="id_imovel">
 							<button type="submit" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" title="Transferir"><i class="fa fa-exchange" ></i></button>
 						</form>
+						{% if(not imovel.imovelPossuiLocacoes()) %}
+						<form class="" action="/admin/imoveis/delete" method="POST">
+							<input type="hidden" value="{{imovel.getId()}}" name="id_imovel">
+							<button type="submit" class="btn btn-danger btn-md" data-toggle="tooltip" data-placement="top" title="Deletar"><i class="fa fa-trash" ></i></button>
+						</form>
+						{% endif %}
+						
 					</td>
 				</tr>
 				{% endfor %}

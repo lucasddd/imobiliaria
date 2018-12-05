@@ -239,4 +239,37 @@ function getLocacaoPeloImovelId($id) {
         return 'deu erro na conexão:' . $ex;
     }
 }
+function getTodasLocacaoParaImovel($id) {
+    try {
+        //status = 1 LOCADO;
+        $sql = 'select * from locacoes where imovel_id = :id';
+        $p_sql = Conexao::getInstancia()->prepare($sql);
+        $p_sql->bindValue(':id',$id);
+        $p_sql->execute();
+        if ($p_sql->rowCount() > 0) {
+            $locacao_ = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
+            $locacao = new Locacao();
+            $clienteModelo = new ClienteModelo();
+            $imovelModelo = new ImovelModelo();
+            $imovel = $imovelModelo->getImovel($locacao_->imovel_id);
+            $locador = $clienteModelo->getClientePeloId($locacao_->locador_id);
+            $imovel->setLocador($locador);
+            $locacao->setLocador($locador);
+            $locacao->setImovel($imovel);
+            $locacao->setId($locacao_->id);
+            $locacao->setDataLocacao($locacao_->data_locacao);
+            $locacao->setValorMensal($locacao_->valor_mensal);
+            $locacao->setValorVenda($locacao_->valor_venda);
+            $locacao->setValorComissao($locacao_->valor_comissao);
+            $locacao->setDataEncerramento($locacao_->data_encerramento);
+            $locacao->setStatus($locacao_->status);
+            $locacao->setDiaVencimento($locacao_->dia_vencimento);
+            $locacao->setDiaRepasse($locacao_->dia_repasse);
+            return $locacao;
+        }
+        return null;
+    } catch (Exception $ex) {
+        return 'deu erro na conexão:' . $ex;
+    }
+}
 }

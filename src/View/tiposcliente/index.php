@@ -2,16 +2,6 @@
 {% block conteudo %}
 <div class="col-md-12">
 	<h4 class="text-center text-success">.:: Tipos de cliente ::.</h4>
-	<div class="row">
-		<div class="col-md-6">
-			<a href="/admin/tiposcliente/novo" class="btn btn-primary"><i class="fa fa-plus"></i> Novo</a>
-		</div>
-		<div class="col-md-6">
-			<form action="/admin/tiposcliente" method="GET">
-			<input type="text" class="form-control" name="busca" maxlength="50"  placeholder="Pesquisa" autofocus>
-			</form>
-		</div>
-	</div>
 	<div class="table-responsive">
 		<table id="table" class="table table-sm table-striped table-condensed table-bordered table-hover" cellspacing="0" width="100%">
 			<thead>

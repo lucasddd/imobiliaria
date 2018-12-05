@@ -254,5 +254,17 @@ function getImoveisPeloTipo($id) {
         return 'deu erro na conexão:' . $ex;
     }
 }
+function deleteImovel(Imovel $imovel){
+    try {
+        $sql = 'delete from imoveis where id = :id';
+        $p_sql = Conexao::getInstancia()->prepare($sql);
+        $p_sql->bindValue(':id', $imovel->getId());
+        if ($p_sql->execute())
+            return true;
+        return null;
+    } catch (Exception $ex) {
+        return 'deu erro na conexão:' . $ex;
+    }
+}
 
 }

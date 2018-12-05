@@ -5,6 +5,7 @@ namespace PPI2\Entidades;
 use PPI2\Entidades\Cliente;
 use PPI2\Entidades\TipoImovel;
 use PPI2\Modelos\TipoImovelModelo;
+use PPI2\Modelos\LocacaoModelo;
 
 class Imovel {
 
@@ -145,5 +146,10 @@ class Imovel {
     }
     function setObs($obs){
         $this->obs = $obs;
+    }
+
+    public function imovelPossuiLocacoes(){
+        $locacaoModelo = new LocacaoModelo();
+        return $locacaoModelo->getTodasLocacaoParaImovel($this->id);
     }
 }

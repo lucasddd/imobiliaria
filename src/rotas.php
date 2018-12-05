@@ -25,15 +25,6 @@ $rotas->add('logout', new Route('/logout',
 $rotas->add('tiposCliente', new Route('/admin/tiposcliente',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
             "method" => 'index')));
-/* deixar só tabela */
-$rotas->add('novoTipoCliente', new Route('/admin/tiposcliente/novo',
-        array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
-            "method" => 'novo')));
-
-$rotas->add('salvarTipoCliente', new Route('/admin/tiposcliente/salvar',
-        array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
-            "method" => 'salvar')));
-
 $rotas->add('editTipoCliente', new Route('/admin/tiposcliente/editar/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerTipoCliente',
             "method" => 'editar','suffix' => '')));
@@ -132,6 +123,10 @@ $rotas->add('atualizarImovel', new Route('/admin/imoveis/atualizar',
 $rotas->add('removeImage', new Route('/admin/imoveis/removeimage',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'removeImage')));
+
+$rotas->add('deleteImovel', new Route('/admin/imoveis/delete',
+        array('_controller' => 'PPI2\Controller\ControllerImovel',
+            "method" => 'delete')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE IMOVEIS        */
 /*      INICIO DAS ROTAS PARA LOCACAO DE IMOVEIS        */
 $rotas->add('alugar_informecpf', new Route('/admin/imoveis/alugar_informecpf',
