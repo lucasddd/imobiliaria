@@ -8,6 +8,7 @@ use PPI2\Entidades\TipoImovel;
 use PPI2\Entidades\Cliente;
 use PPI2\Modelos\ClienteModelo;
 use PPI2\Modelos\TipoImovelModelo;
+use PPI2\Modelos\LocacaoModelo;
 use PDO;
 
 class ImovelModelo {
@@ -23,6 +24,7 @@ class ImovelModelo {
             $listImoveis = array();
             $clienteModelo = new ClienteModelo();
             $tipoModelo = new TipoImovelModelo();
+            $locacaoModelo = new LocacaoModelo();
             foreach ($imoveis as $key => $imovel_) {
                 $imovel = new Imovel();
                 $imovel->setId($imovel_->id);
@@ -38,6 +40,9 @@ class ImovelModelo {
                 $imovel->setFoto1($imovel_->foto1);
                 $imovel->setFoto2($imovel_->foto2);
                 $imovel->setFoto3($imovel_->foto3);
+                $locacao = $locacaoModelo->getLocacaoPeloImovelId($imovel->getId());
+                if(isset($locacao))
+                    $imovel->setLocador($locacao->getLocador());
                 $locatario = new Cliente();
                 $locatario = $clienteModelo->getClientePeloId($imovel_->proprietario_id);
                 $imovel->setLocatario($locatario);

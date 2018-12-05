@@ -4,9 +4,6 @@ namespace PPI2\Modelos;
 
 use PPI2\Util\Conexao;
 use PPI2\Entidades\Locacao;
-use PPI2\Entidades\Imovel;
-use PPI2\Entidades\TipoImovel;
-use PPI2\Entidades\Cliente;
 use PPI2\Modelos\ClienteModelo;
 use PPI2\Modelos\TipoImovelModelo;
 use PPI2\Modelos\ImovelModelo;
@@ -96,33 +93,19 @@ return $listLocacoes;
 }
 }
 
-function salvar(Imovel $imovel) {
+function salvar(Locacao $locacao) {
 
     try {
-        $sql = 'insert into locacoes (endereco,bairro,tipo_locacao_id,
-            foto1,foto2,foto3,situacao,proprietario_id,valor_venda,valor_locacao,
-            qt_suites,qt_banheiros,qt_quartos,obs,area_construida) 
-values(
-    upper(:endereco),:bairro,:tipo_locacao_id,:foto1,
-    :foto2,:foto3,1,:proprietario_id,:valor_venda,
-    :valor_locacao,:qt_suites,:qt_banheiros,:qt_quartos,
-    :obs,:area_construida
-    )';
+        $sql = 'insert into locacoes (locador_id,valor_mensal,valor_comissao,
+            imovel_id,dia_vencimento,dia_repasse) values(
+    :locador_id,:valor_mensal,:valor_comissao,:imovel_id,:dia_vencimento,:dia_repasse)';
 $p_sql = Conexao::getInstancia()->prepare($sql);
-$p_sql->bindValue(':endereco', $imovel->getEndereco());
-$p_sql->bindValue(':bairro', $imovel->getBairro());
-$p_sql->bindValue(':tipo_locacao_id', $imovel->getTipoImovel()->getId());
-$p_sql->bindValue(':foto1', $imovel->getFoto1());
-$p_sql->bindValue(':foto2', $imovel->getFoto2());
-$p_sql->bindValue(':foto3', $imovel->getFoto3());
-$p_sql->bindValue(':proprietario_id', $imovel->getLocatario()->getId());
-$p_sql->bindValue(':valor_venda', $imovel->getValorVenda());
-$p_sql->bindValue(':valor_locacao', $imovel->getValorLocacao());
-$p_sql->bindValue(':qt_suites', $imovel->getQtSuites());
-$p_sql->bindValue(':qt_banheiros', $imovel->getQtBanheiros());
-$p_sql->bindValue(':qt_quartos', $imovel->getQtQuartos());
-$p_sql->bindValue(':obs', $imovel->getObs());
-$p_sql->bindValue(':area_construida', $imovel->getAreaConstruida());
+$p_sql->bindValue(':locador_id', $locacao->getLocador()->getId());
+$p_sql->bindValue(':valor_mensal', $locacao->getValorMensal());
+$p_sql->bindValue(':valor_comissao', $locacao->getValorComissao());
+$p_sql->bindValue(':imovel_id', $locacao->getImovel()->getId());
+$p_sql->bindValue(':dia_vencimento', $locacao->getDiaVencimento());
+$p_sql->bindValue(':dia_repasse', $locacao->getDiaRepasse());
 if ($p_sql->execute())
     return Conexao::getInstancia()->lastInsertId();
 return null;
@@ -194,6 +177,39 @@ function transferirImovel($idImovel,$newLocatario){
 function getLocacao($id) {
     try {
         $sql = 'select * from locacoes where id = :id';
+        $p_sql = Conexao::getInstancia()->prepare($sql);
+        $p_sql->bindValue(':id',$id);
+        $p_sql->execute();
+        if ($p_sql->rowCount() > 0) {
+            $locacao_ = $p_sql->fetchAll(PDO::FETCH_OBJ)[0];
+            $locacao = new Locacao();
+            $clienteModelo = new ClienteModelo();
+            $imovelModelo = new ImovelModelo();
+            $imovel = $imovelModelo->getImovel($locacao_->imovel_id);
+            $locador = $clienteModelo->getClientePeloId($locacao_->locador_id);
+            $imovel->setLocador($locador);
+            $locacao->setLocador($locador);
+            $locacao->setImovel($imovel);
+            $locacao->setId($locacao_->id);
+            $locacao->setDataLocacao($locacao_->data_locacao);
+            $locacao->setValorMensal($locacao_->valor_mensal);
+            $locacao->setValorVenda($locacao_->valor_venda);
+            $locacao->setValorComissao($locacao_->valor_comissao);
+            $locacao->setDataEncerramento($locacao_->data_encerramento);
+            $locacao->setStatus($locacao_->status);
+            $locacao->setDiaVencimento($locacao_->dia_vencimento);
+            $locacao->setDiaRepasse($locacao_->dia_repasse);
+            return $locacao;
+        }
+        return null;
+    } catch (Exception $ex) {
+        return 'deu erro na conexão:' . $ex;
+    }
+}
+function getLocacaoPeloImovelId($id) {
+    try {
+        //status = 1 LOCADO;
+        $sql = 'select * from locacoes where imovel_id = :id and status = 1';
         $p_sql = Conexao::getInstancia()->prepare($sql);
         $p_sql->bindValue(':id',$id);
         $p_sql->execute();

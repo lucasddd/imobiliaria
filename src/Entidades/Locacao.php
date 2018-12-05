@@ -62,6 +62,15 @@ class Locacao {
     function setDataEncerramento($dataEncerramento){
         $this->dataEncerramento = $dataEncerramento;
     }
+    function getDataLocacao(){
+        return $this->dataLocacao;
+    }
+    function setDataLocacao($dataLocacao){
+        $this->dataLocacao = $dataLocacao;
+    }
+    function setStatus($status){
+        $this->status = $status;
+    }
     function getStatus(){
         return $this->status;
     }
@@ -80,4 +89,5 @@ class Locacao {
     function setDiaVencimento($diaVencimento){
         $this->diaVencimento = $diaVencimento;
     }
+    
 }

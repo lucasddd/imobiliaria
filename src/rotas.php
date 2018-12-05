@@ -109,14 +109,6 @@ $rotas->add('transferirImovel', new Route('/admin/imoveis/transferir',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'transferirImovel', 'suffix' => '')));
 
-$rotas->add('alugar_informecpf', new Route('/admin/imoveis/alugar_informecpf',
-        array('_controller' => 'PPI2\Controller\ControllerImovel',
-            "method" => 'alugar_informecpf', 'suffix' => '')));
-
-$rotas->add('alugarImovel', new Route('/admin/imoveis/alugarimovel',
-        array('_controller' => 'PPI2\Controller\ControllerImovel',
-            "method" => 'alugarImovel', 'suffix' => '')));
-
 $rotas->add('salvarImovel', new Route('/admin/imoveis/salvar',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'salvar')));
@@ -141,6 +133,19 @@ $rotas->add('removeImage', new Route('/admin/imoveis/removeimage',
         array('_controller' => 'PPI2\Controller\ControllerImovel',
             "method" => 'removeImage')));
 /*      FIM DAS ROTAS PARA MANUTENÇÃO DE IMOVEIS        */
+/*      INICIO DAS ROTAS PARA LOCACAO DE IMOVEIS        */
+$rotas->add('alugar_informecpf', new Route('/admin/imoveis/alugar_informecpf',
+        array('_controller' => 'PPI2\Controller\ControllerLocacao',
+            "method" => 'alugar_informecpf', 'suffix' => '')));
+
+$rotas->add('alugarImovel', new Route('/admin/imoveis/alugarimovel',
+        array('_controller' => 'PPI2\Controller\ControllerLocacao',
+            "method" => 'alugarImovel', 'suffix' => '')));
+
+$rotas->add('salvarLocacao', new Route('/admin/imoveis/aluguelimovel_salvar',
+        array('_controller' => 'PPI2\Controller\ControllerLocacao',
+            "method" => 'salvar')));
+/*      FIM DAS ROTAS PARA LOCACAO DE IMOVEIS        */
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
 
